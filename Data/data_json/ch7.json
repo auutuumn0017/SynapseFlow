@@ -1,0 +1,172 @@
+{
+  "nodes": [
+    {
+      "Name": "支持向量机",
+      "Type": "Model",
+      "Definition": "一种二类分类模型，基本模型是定义在特征空间上的间隔最大的线性分类器；通过核技巧，可成为实质上的非线性分类器。学习策略是间隔最大化，可形式化为凸二次规划问题，也等价于合页损失函数最小化加正则化。",
+      "Formula": "决策函数：$f(x)=\\text{sign}(w^*\\cdot x+b^*)$ 或 $f(x)=\\text{sign}(\\sum_{i=1}^{N}\\alpha_i^* y_i K(x,x_i)+b^*)$",
+      "Teaching_Note": "SVM是判别模型，由支持向量唯一决定分离超平面。数据集较少时SVM效果可能较好。",
+      "Source": "CH07-支持向量机"
+    },
+    {
+      "Name": "线性可分支持向量机",
+      "Type": "Model",
+      "Definition": "当训练数据线性可分时，利用硬间隔最大化学习得到的线性分类器，对应一个将两类数据正确分开且间隔最大的分离超平面。",
+      "Formula": "分离超平面：$w^*\\cdot x+b^*=0$；决策函数：$f(x)=\\text{sign}(w^*\\cdot x+b^*)$",
+      "Teaching_Note": "要求所有样本点满足函数间隔≥1，支持向量严格满足等式。",
+      "Source": "CH07-线性可分支持向量机"
+    },
+    {
+      "Name": "线性支持向量机",
+      "Type": "Model",
+      "Definition": "对于近似线性可分的数据，通过软间隔最大化学习的线性分类器，引入松弛变量允许少量误分类，并由惩罚参数C控制间隔与误分类的平衡。",
+      "Formula": "原始问题：$\\min_{w,b,\\xi}\\frac{1}{2}\\|w\\|^2+C\\sum_{i=1}^N\\xi_i$ 约束 $y_i(w\\cdot x_i+b)\\ge 1-\\xi_i, \\xi_i\\ge 0$",
+      "Teaching_Note": "线性支持向量机包含线性可分支持向量机（当C→∞时）。$w^*$唯一但$b^*$不一定唯一。",
+      "Source": "CH07-线性支持向量机"
+    },
+    {
+      "Name": "非线性支持向量机",
+      "Type": "Model",
+      "Definition": "利用核函数将输入空间映射到高维特征空间，在特征空间中应用线性支持向量机学习，从而得到原空间中的非线性分类模型。",
+      "Formula": "决策函数：$f(x)=\\text{sign}\\left(\\sum_{i=1}^{N_s}\\alpha_i^* y_i K(x_i,x)+b^*\\right)$",
+      "Teaching_Note": "通过核技巧隐式地进行特征映射，无需显式定义映射函数。",
+      "Source": "CH07-非线性支持向量机"
+    },
+    {
+      "Name": "支持向量",
+      "Type": "Concept",
+      "Definition": "在支持向量机对偶问题中，对应于$\\alpha_i>0$的训练样本点，它们决定了分离超平面的位置和方向。",
+      "Formula": "支持向量满足：$y_i(w\\cdot x_i+b)=1$ 或 $0<\\alpha_i<C$",
+      "Teaching_Note": "SVM的名称正是源于这些关键样本点——支持向量。",
+      "Source": "CH07-支持向量和间隔边界"
+    },
+    {
+      "Name": "硬间隔最大化",
+      "Type": "Strategy",
+      "Definition": "线性可分支持向量机的学习策略，在保证所有样本正确分类且函数间隔不小于1的前提下，最大化几何间隔（即最小化$\\|w\\|$）。",
+      "Formula": "$\\min_{w,b}\\frac{1}{2}\\|w\\|^2$ 约束 $y_i(w\\cdot x_i+b)-1\\ge 0$",
+      "Teaching_Note": "形式上是一个凸二次规划问题。",
+      "Source": "CH07-间隔最大化"
+    },
+    {
+      "Name": "软间隔最大化",
+      "Type": "Strategy",
+      "Definition": "线性支持向量机的学习策略，引入松弛变量允许某些样本不满足函数间隔≥1的约束，并通过惩罚项C∑ξ_i限制违规程度，在间隔大小与误分类之间折衷。",
+      "Formula": "$\\min_{w,b,\\xi}\\frac{1}{2}\\|w\\|^2+C\\sum_{i=1}^N\\xi_i$ 约束 $y_i(w\\cdot x_i+b)\\ge 1-\\xi_i, \\xi_i\\ge 0$",
+      "Teaching_Note": "软间隔最大化等价于合页损失加L2正则化的经验风险最小化。",
+      "Source": "CH07-软间隔最大化"
+    },
+    {
+      "Name": "合页损失函数",
+      "Type": "Math",
+      "Definition": "一种损失函数，形如$L(y,f(x))=[1-y f(x)]_+$，当函数间隔大于1时损失为0，否则线性惩罚，要求预测具有足够高的确信度。",
+      "Formula": "$L(y(w\\cdot x+b))=\\max(0, 1-y(w\\cdot x+b))$",
+      "Teaching_Note": "合页损失是0-1损失的上界，比感知机损失要求更严格（正确且确信度足够高才无损失）。",
+      "Source": "CH07-合页损失"
+    },
+    {
+      "Name": "核函数",
+      "Type": "Math",
+      "Definition": "定义在输入空间上的对称函数$K(x,z)$，能够表示为特征空间中映射的内积，即$K(x,z)=\\phi(x)\\cdot\\phi(z)$，从而实现隐式的非线性映射。",
+      "Formula": "$K(x,z)=\\phi(x)\\cdot\\phi(z)$，常用如多项式核$K(x,z)=(x\\cdot z+1)^p$，高斯核$K(x,z)=\\exp(-\\|x-z\\|^2/2\\sigma^2)$",
+      "Teaching_Note": "使用核函数可避免显式计算高维映射，在SVM中实现非线性分类。",
+      "Source": "CH07-核函数"
+    },
+    {
+      "Name": "序列最小最优化算法",
+      "Type": "Algorithm",
+      "Definition": "一种快速求解支持向量机对偶问题（凸二次规划）的算法，每次只选择两个变量进行优化，将大规模问题分解为一系列小规模子问题，并采用启发式方法选择变量。",
+      "Formula": "无",
+      "Teaching_Note": "SMO算法包括两部分：两变量解析求解和启发式变量选择。KKT条件用作停机准则。",
+      "Source": "CH07-序列最小最优化算法"
+    },
+    {
+      "Name": "KKT条件",
+      "Type": "Math",
+      "Definition": "Karush-Kuhn-Tucker条件，是凸优化问题全局最优解的充分必要条件，包括梯度条件、互补松弛条件和原始/对偶可行性等。",
+      "Formula": "无",
+      "Teaching_Note": "在SMO中，KKT条件用于判断当前解是否最优，并作为算法终止准则。",
+      "Source": "CH07-KKT条件"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "支持向量机",
+      "Relation": "COMPRISE",
+      "Tail": "线性可分支持向量机",
+      "Context": "支持向量机的基本情况，训练数据线性可分时使用硬间隔最大化"
+    },
+    {
+      "Head": "支持向量机",
+      "Relation": "COMPRISE",
+      "Tail": "线性支持向量机",
+      "Context": "支持向量机的一般形式，允许软间隔处理近似线性可分数据"
+    },
+    {
+      "Head": "支持向量机",
+      "Relation": "COMPRISE",
+      "Tail": "非线性支持向量机",
+      "Context": "通过核技巧将支持向量机推广到非线性分类"
+    },
+    {
+      "Head": "线性可分支持向量机",
+      "Relation": "PREREQUISITE",
+      "Tail": "硬间隔最大化",
+      "Context": "线性可分SVM的学习策略就是硬间隔最大化"
+    },
+    {
+      "Head": "线性支持向量机",
+      "Relation": "PREREQUISITE",
+      "Tail": "软间隔最大化",
+      "Context": "线性支持向量机采用软间隔最大化策略"
+    },
+    {
+      "Head": "非线性支持向量机",
+      "Relation": "PREREQUISITE",
+      "Tail": "核函数",
+      "Context": "非线性支持向量机通过核函数隐式地将输入映射到高维特征空间"
+    },
+    {
+      "Head": "软间隔最大化",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "结构风险最小化",
+      "Context": "当损失函数为合页损失函数且正则化项为L2范数时，软间隔最大化等价于结构风险最小化"
+    },
+    {
+      "Head": "支持向量机",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "序列最小最优化算法",
+      "Context": "SVM的学习问题可形式化为凸二次规划，常用SMO算法求解对偶问题"
+    },
+    {
+      "Head": "序列最小最优化算法",
+      "Relation": "PREREQUISITE",
+      "Tail": "KKT条件",
+      "Context": "SMO算法以KKT条件作为停机准则和变量选择依据"
+    },
+    {
+      "Head": "支持向量机",
+      "Relation": "COMPARE",
+      "Tail": "感知机",
+      "Context": "两者都是线性分类模型，但感知机仅仅寻找一个分离超平面，而SVM追求最大间隔；感知机解不唯一，SVM解唯一"
+    },
+    {
+      "Head": "硬间隔最大化",
+      "Relation": "PREREQUISITE",
+      "Tail": "几何间隔",
+      "Context": "硬间隔最大化通过最大化几何间隔来实现，等价于最小化法向量范数"
+    },
+    {
+      "Head": "合页损失函数",
+      "Relation": "PREREQUISITE",
+      "Tail": "函数间隔",
+      "Context": "合页损失基于函数间隔定义：$L = \\max(0, 1 - y(w\\cdot x+b))$"
+    },
+    {
+      "Head": "线性支持向量机",
+      "Relation": "COMPRISE",
+      "Tail": "支持向量",
+      "Context": "线性支持向量机中，决定分离超平面的关键样本点称为支持向量（$\\alpha_i>0$）"
+    }
+  ]
+}

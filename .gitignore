@@ -1,0 +1,17 @@
+# Neo4j credentials and API keys
+Neo4j-*.txt
+*credentials.txt
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Node
+node_modules/
+
+# Models
+*.safetensors
+*.bin
+*.pth

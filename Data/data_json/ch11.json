@@ -1,0 +1,212 @@
+{
+  "nodes": [
+    {
+      "Name": "线性链条件随机场",
+      "Type": "Model",
+      "Definition": "设X与Y为线性链表示的随机变量序列，在给定X的条件下，Y的条件概率分布P(Y|X)构成条件随机场，即满足马尔可夫性P(Y_i|X,Y_1,...,Y_{i-1},Y_{i+1},...,Y_n)=P(Y_i|X,Y_{i-1},Y_{i+1})，则称P(Y|X)为线性链条件随机场。",
+      "Formula": "$P(y|x)=\\frac{1}{Z(x)}\\exp\\left(\\sum_{i,k}\\lambda_k t_k(y_{i-1},y_i,x,i)+\\sum_{i,l}\\mu_l s_l(y_i,x,i)\\right)$",
+      "Teaching_Note": "CRF是对数线性模型，可以看作最大熵马尔可夫模型在标注问题上的推广。",
+      "Source": "CH11-条件随机场的定义与形式"
+    },
+    {
+      "Name": "概率无向图模型",
+      "Type": "Model",
+      "Definition": "又称马尔可夫随机场(MRF)，是由满足成对、局部、全局马尔可夫性的无向图表示的联合概率分布。",
+      "Formula": "无",
+      "Teaching_Note": "概率无向图模型的最大特点是易于因子分解。",
+      "Source": "CH11-概率无向图模型"
+    },
+    {
+      "Name": "马尔可夫随机场",
+      "Type": "Model",
+      "Definition": "同概率无向图模型，是用无向图表示变量间条件依赖关系的联合概率分布模型。",
+      "Formula": "无",
+      "Teaching_Note": "条件随机场是给定输入变量条件下的马尔可夫随机场。",
+      "Source": "CH11-概率无向图模型"
+    },
+    {
+      "Name": "最大团",
+      "Type": "Concept",
+      "Definition": "在无向图中，若一个团中不能再加入任何一个结点使其成为更大的团，则称该团为最大团。",
+      "Formula": "无",
+      "Teaching_Note": "概率无向图模型的联合概率分布可分解为最大团上势函数的乘积。",
+      "Source": "CH11-团与最大团"
+    },
+    {
+      "Name": "因子分解",
+      "Type": "Strategy",
+      "Definition": "将概率无向图模型的联合概率分布表示为其最大团上随机变量函数的乘积形式，函数称为势函数，通常定义为指数函数。",
+      "Formula": "$P(Y)=\\frac{1}{Z}\\prod_{C}\\Psi_C(Y_C)$",
+      "Teaching_Note": "因子分解是概率无向图模型的核心操作。",
+      "Source": "CH11-概率无向图的因子分解"
+    },
+    {
+      "Name": "特征函数",
+      "Type": "Math",
+      "Definition": "在条件随机场中，用于描述输入序列和输出序列之间局部特征关系的实值函数。包括定义在边上的转移特征t_k和定义在结点上的状态特征s_l，均依赖于位置i。",
+      "Formula": "$f_k(y_{i-1},y_i,x,i)=\\begin{cases} t_k(y_{i-1},y_i,x,i),&k=1,\\dots,K_1\\\\ s_l(y_i,x,i),&k=K_1+l\\end{cases}$",
+      "Teaching_Note": "与最大熵模型的特征函数类似，但这里特征函数明确依赖于位置信息i。",
+      "Source": "CH11-特征函数"
+    },
+    {
+      "Name": "转移特征",
+      "Type": "Math",
+      "Definition": "定义在条件随机场相邻输出结点之间的特征函数，描述从前一状态到后一状态的转移模式。",
+      "Formula": "$t_k(y_{i-1},y_i,x,i)$",
+      "Teaching_Note": "转移特征对应于线性链中的边。",
+      "Source": "CH11-条件随机场的参数化形式"
+    },
+    {
+      "Name": "状态特征",
+      "Type": "Math",
+      "Definition": "定义在条件随机场输出结点上的特征函数，描述当前状态与观测之间的关系。",
+      "Formula": "$s_l(y_i,x,i)$",
+      "Teaching_Note": "状态特征对应于线性链中的结点。",
+      "Source": "CH11-条件随机场的参数化形式"
+    },
+    {
+      "Name": "条件随机场的矩阵形式",
+      "Type": "Model",
+      "Definition": "线性链条件随机场的一种等价表示形式，将每个位置i处的转移和状态特征表示为m阶矩阵，通过矩阵乘积计算非规范化概率和规范化因子。",
+      "Formula": "$P_w(y|x)=\\frac{1}{Z_w(x)}\\prod_{i=1}^{n+1}M_i(y_{i-1},y_i|x)$；$M_i(y_{i-1},y_i|x)=\\exp\\left(\\sum_{k=1}^K w_k f_k(y_{i-1},y_i,x,i)\\right)$",
+      "Teaching_Note": "矩阵形式便于实现前向-后向算法。$Z_w(x)$等于$n+1$个矩阵乘积的(start,stop)元素。",
+      "Source": "CH11-条件随机场的矩阵形式"
+    },
+    {
+      "Name": "前向-后向算法",
+      "Type": "Algorithm",
+      "Definition": "条件随机场中用于计算概率和期望的动态规划算法。前向向量α_i(y_i|x)表示位置i标记为y_i且到i的前部序列的非规范化概率，后向向量β_i(y_i|x)表示位置i标记为y_i且从i+1到n的后部序列的非规范化概率。",
+      "Formula": "前向：$\\alpha_i^T(y_i|x)=\\alpha_{i-1}^T(y_{i-1}|x)[M_i(y_{i-1},y_i|x)]$；后向：$\\beta_i(y_i|x)=[M_{i+1}(y_i,y_{i+1}|x)]\\beta_{i+1}(y_{i+1}|x)$",
+      "Teaching_Note": "与HMM的前向后向算法思想类似，但这里的转移矩阵Mi依赖于整个观测序列x。",
+      "Source": "CH11-条件随机场的概率计算问题"
+    },
+    {
+      "Name": "条件随机场的学习问题",
+      "Type": "Task",
+      "Definition": "给定训练数据，估计条件随机场模型参数，常用改进的迭代尺度法或拟牛顿法。",
+      "Formula": "无",
+      "Teaching_Note": "条件随机场的学习可归约为优化问题，目标是最大化训练数据的对数似然函数。",
+      "Source": "CH11-条件随机场的学习方法"
+    },
+    {
+      "Name": "条件随机场的预测问题",
+      "Type": "Task",
+      "Definition": "给定条件随机场模型和输入观测序列，求条件概率最大的输出序列（标记序列）。",
+      "Formula": "$y^* = \\arg\\max_y P_w(y|x)$",
+      "Teaching_Note": "与HMM的预测问题类似，使用维特比算法。",
+      "Source": "CH11-条件随机场的预测算法"
+    },
+    {
+      "Name": "势函数",
+      "Type": "Math",
+      "Definition": "概率无向图模型中定义在最大团上的非负实值函数，用于描述团内变量间的相容程度，通常定义为指数函数形式。",
+      "Formula": "$\\Psi_C(Y_C)=\\exp\\left(\\sum_i w_i f_i(Y_C)\\right)$",
+      "Teaching_Note": "势函数的值越大，对应的变量配置越可能。",
+      "Source": "CH11-概率无向图的因子分解"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "生成模型",
+      "Relation": "COMPRISE",
+      "Tail": "马尔可夫随机场",
+      "Context": "马尔可夫随机场属于生成模型，直接对联合概率分布建模"
+    },
+    {
+      "Head": "线性链条件随机场",
+      "Relation": "PREREQUISITE",
+      "Tail": "马尔可夫随机场",
+      "Context": "条件随机场是给定输入变量X条件下，输出变量Y的马尔可夫随机场。"
+    },
+    {
+      "Head": "概率无向图模型",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "马尔可夫随机场",
+      "Context": "概率无向图模型又称马尔可夫随机场。"
+    },
+    {
+      "Head": "概率无向图模型",
+      "Relation": "PREREQUISITE",
+      "Tail": "最大团",
+      "Context": "概率无向图模型的因子分解需要首先确定最大团。"
+    },
+    {
+      "Head": "概率无向图模型",
+      "Relation": "PREREQUISITE",
+      "Tail": "因子分解",
+      "Context": "概率无向图模型的最大特点是易于因子分解。"
+    },
+    {
+      "Head": "因子分解",
+      "Relation": "PREREQUISITE",
+      "Tail": "势函数",
+      "Context": "因子分解将联合概率表示为最大团上势函数的乘积。"
+    },
+    {
+      "Head": "线性链条件随机场",
+      "Relation": "COMPRISE",
+      "Tail": "特征函数",
+      "Context": "CRF模型由特征函数及其对应权值完全确定。"
+    },
+    {
+      "Head": "特征函数",
+      "Relation": "COMPRISE",
+      "Tail": "转移特征",
+      "Context": "转移特征是定义在边上的一类特征函数。"
+    },
+    {
+      "Head": "特征函数",
+      "Relation": "COMPRISE",
+      "Tail": "状态特征",
+      "Context": "状态特征是定义在结点上的一类特征函数。"
+    },
+    {
+      "Head": "线性链条件随机场",
+      "Relation": "PREREQUISITE",
+      "Tail": "条件随机场的矩阵形式",
+      "Context": "矩阵形式是线性链条件随机场的等价表示，便于计算。"
+    },
+    {
+      "Head": "条件随机场的矩阵形式",
+      "Relation": "APPLIED_TO",
+      "Tail": "前向-后向算法",
+      "Context": "前向-后向算法利用矩阵形式进行概率和期望的递推计算。"
+    },
+    {
+      "Head": "前向-后向算法",
+      "Relation": "APPLIED_TO",
+      "Tail": "条件随机场的学习问题",
+      "Context": "学习问题在E步需要前向-后向算法计算概率和期望。"
+    },
+    {
+      "Head": "前向-后向算法",
+      "Relation": "APPLIED_TO",
+      "Tail": "条件随机场的预测问题",
+      "Context": "预测问题（维特比算法）的思路与前向-后向算法类似，但将求和改为求最大值。"
+    },
+    {
+      "Head": "条件随机场的学习问题",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "改进的迭代尺度法",
+      "Context": "可用改进的迭代尺度法(IIS)求解条件随机场的参数。"
+    },
+    {
+      "Head": "线性链条件随机场",
+      "Relation": "COMPARE",
+      "Tail": "隐马尔可夫模型",
+      "Context": "两者都用于序列标注，HMM是生成模型对P(X,Y)建模，CRF是判别模型对P(Y|X)建模。HMM的概率分布是局部归一化的，CRF是全局归一化的。"
+    },
+    {
+      "Head": "线性链条件随机场",
+      "Relation": "COMPARE",
+      "Tail": "最大熵模型",
+      "Context": "两者都是对数线性模型，条件随机场可以看做最大熵模型在序列标注问题上的推广，特征函数增加了位置依赖。"
+    },
+    {
+      "Head": "线性链条件随机场",
+      "Relation": "APPLIED_TO",
+      "Tail": "标注问题",
+      "Context": "线性链条件随机场广泛应用于序列标注问题。"
+    }
+  ]
+}

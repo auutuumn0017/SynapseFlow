@@ -1,0 +1,440 @@
+{
+  "nodes": [
+    {
+      "Name": "统计学习",
+      "Type": "Concept",
+      "Definition": "统计学习是关于计算机基于数据构建概率统计模型并运用模型对数据进行预测与分析的一门学科。",
+      "Formula": "无",
+      "Teaching_Note": "本书主要讨论监督学习。",
+      "Source": "CH01-统计学习及监督学习概论"
+    },
+    {
+      "Name": "监督学习",
+      "Type": "Task",
+      "Definition": "从给定有限的训练数据出发，假设数据是独立同分布的，并且假设模型属于某个假设空间，应用某一评价准则，从假设空间中选取一个最优的模型，使它对已给的训练数据以及未知测试数据在给定评价标准意义下有最准确的预测。",
+      "Formula": "无",
+      "Teaching_Note": "在监督学习中输入和输出对称为样本。",
+      "Source": "CH01-基本分类"
+    },
+    {
+      "Name": "无监督学习",
+      "Type": "Task",
+      "Definition": "从无标注数据中学习预测模型，样本只有输入x。",
+      "Formula": "无",
+      "Teaching_Note": "无",
+      "Source": "CH01-基本分类"
+    },
+    {
+      "Name": "强化学习",
+      "Type": "Task",
+      "Definition": "智能系统在与环境的连续互动中学习最优行为策略的机器学习问题。",
+      "Formula": "无",
+      "Teaching_Note": "无",
+      "Source": "CH01-基本分类"
+    },
+    {
+      "Name": "模型",
+      "Type": "Concept",
+      "Definition": "在监督学习中，模型是所要学习的条件概率分布或决策函数。",
+      "Formula": "假设空间：$\\cal F =\\{f_{\\theta} \\mid Y=f_{\\theta}(x), \\theta \\in \\bf R ^n\\}$ 或 $\\cal F =\\{P\\mid P_{\\theta}(Y\\mid X),\\theta\\in \\bf R ^n\\}$",
+      "Teaching_Note": "模型由假设空间和参数空间决定。",
+      "Source": "CH01-模型"
+    },
+    {
+      "Name": "策略",
+      "Type": "Concept",
+      "Definition": "按照什么样的准则学习或选择最优模型。",
+      "Formula": "无",
+      "Teaching_Note": "损失函数、风险函数、经验风险、结构风险都是策略的一部分。",
+      "Source": "CH01-策略"
+    },
+    {
+      "Name": "算法",
+      "Type": "Concept",
+      "Definition": "学习模型的具体计算方法，即求解最优模型的算法。",
+      "Formula": "无",
+      "Teaching_Note": "统计学习方法三要素：模型、策略、算法。",
+      "Source": "CH01-算法"
+    },
+    {
+      "Name": "假设空间",
+      "Type": "Concept",
+      "Definition": "包含所有可能的模型的集合，即学习模型的集合。",
+      "Formula": "$\\cal F$",
+      "Teaching_Note": "无",
+      "Source": "CH01-实现统计学习方法的步骤"
+    },
+    {
+      "Name": "损失函数",
+      "Type": "Math",
+      "Definition": "度量模型一次预测好坏的函数，定义为给定输入X的预测值f(X)和真实值Y之间的非负实值函数，记作L(Y,f(X))。",
+      "Formula": "$L(Y,f(X))$",
+      "Teaching_Note": "损失函数数值越小，模型越好。注意与风险函数的区别。",
+      "Source": "CH01-损失函数与风险函数"
+    },
+    {
+      "Name": "风险函数",
+      "Type": "Math",
+      "Definition": "度量平均意义下模型预测好坏的函数，即模型关于联合分布P(X,Y)的期望损失。",
+      "Formula": "$R_{exp}(f)=E_p[L(Y, f(X))]=\\int_{\\mathcal X\\times\\mathcal Y}L(y,f(x))P(x,y)\\, {\\rm d}x{\\rm d}y$",
+      "Teaching_Note": "因P(X,Y)未知，所以是期望，也称期望损失。",
+      "Source": "CH01-风险函数"
+    },
+    {
+      "Name": "经验风险",
+      "Type": "Math",
+      "Definition": "模型关于训练样本集的平均损失。",
+      "Formula": "$R_{emp}(f)=\\frac{1}{N}\\sum^{N}_{i=1}L(y_i,f(x_i))$",
+      "Teaching_Note": "根据大数定律，当样本容量N趋于无穷大时，经验风险趋于期望风险。",
+      "Source": "CH01-经验风险"
+    },
+    {
+      "Name": "结构风险",
+      "Type": "Math",
+      "Definition": "在经验风险上加上表示模型复杂度的正则化项或罚项。",
+      "Formula": "$R_{srm}(f)=\\frac{1}{N}\\sum_{i=1}^{N}L(y_i,f(x_i))+\\lambda J(f)$",
+      "Teaching_Note": "$J(f)$为模型复杂度，$\\lambda \\geqslant 0$是系数，用以权衡经验风险和模型复杂度。",
+      "Source": "CH01-结构风险"
+    },
+    {
+      "Name": "0-1损失函数",
+      "Type": "Math",
+      "Definition": "当预测错误时损失为1，正确时损失为0的损失函数。",
+      "Formula": "$L(Y,f(X))=\\begin{cases}1, Y \\neq f(X) \\\\0, Y=f(X) \\end{cases}$",
+      "Teaching_Note": "无",
+      "Source": "CH01-常用损失函数"
+    },
+    {
+      "Name": "平方损失函数",
+      "Type": "Math",
+      "Definition": "预测值与真实值之差的平方。",
+      "Formula": "$L(Y,f(X))=(Y-f(X))^2$",
+      "Teaching_Note": "无",
+      "Source": "CH01-常用损失函数"
+    },
+    {
+      "Name": "绝对损失函数",
+      "Type": "Math",
+      "Definition": "预测值与真实值之差的绝对值。",
+      "Formula": "$L(Y,f(X))=|Y-f(X)|$",
+      "Teaching_Note": "无",
+      "Source": "CH01-常用损失函数"
+    },
+    {
+      "Name": "对数损失函数",
+      "Type": "Math",
+      "Definition": "负的对数似然，用于概率模型。",
+      "Formula": "$L(Y,P(Y|X))=-\\log P(Y|X)$",
+      "Teaching_Note": "由于P(Y|X)≤1，对数是负值，所以加负号使其非负。",
+      "Source": "CH01-常用损失函数"
+    },
+    {
+      "Name": "经验风险最小化",
+      "Type": "Strategy",
+      "Definition": "在经验风险最小的准则下求解最优模型。",
+      "Formula": "无",
+      "Teaching_Note": "极大似然估计是经验风险最小化当模型为条件概率分布、损失为对数损失时的特例。",
+      "Source": "CH01-ERM与SRM"
+    },
+    {
+      "Name": "结构风险最小化",
+      "Type": "Strategy",
+      "Definition": "在结构风险最小的准则下求解最优模型，以防止过拟合。",
+      "Formula": "无",
+      "Teaching_Note": "最大后验概率估计是结构风险最小化当模型为条件概率分布、损失为对数损失、模型复杂度由模型的先验概率表示时的特例。",
+      "Source": "CH01-ERM与SRM"
+    },
+    {
+      "Name": "极大似然估计",
+      "Type": "Algorithm",
+      "Definition": "通过最大化似然函数来估计模型参数的统计方法。",
+      "Formula": "无",
+      "Teaching_Note": "等价于经验风险最小化（条件概率模型+对数损失）。",
+      "Source": "CH01-ERM与SRM"
+    },
+    {
+      "Name": "最大后验概率估计",
+      "Type": "Algorithm",
+      "Definition": "结合先验分布，通过最大化后验概率来估计模型参数的方法。",
+      "Formula": "无",
+      "Teaching_Note": "等价于结构风险最小化（条件概率模型+对数损失+模型先验）。",
+      "Source": "CH01-ERM与SRM"
+    },
+    {
+      "Name": "正则化",
+      "Type": "Strategy",
+      "Definition": "模型选择的典型方法，通过在经验风险上添加正则化项来限制模型复杂度，符合奥卡姆剃刀原理。",
+      "Formula": "$\\lambda J(f)$ 作为结构风险的组成部分",
+      "Teaching_Note": "正则化用于防止过拟合。",
+      "Source": "CH01-正则化"
+    },
+    {
+      "Name": "交叉验证",
+      "Type": "Evaluation",
+      "Definition": "一种模型选择方法，将数据切分为训练集和验证集，反复训练和评估以选出平均测试误差最小的模型。",
+      "Formula": "无",
+      "Teaching_Note": "验证集与测试集不同：验证集用于模型选择时的‘偷窥’效果，测试集用于最终评估。常用有S折交叉验证、留一法。",
+      "Source": "CH01-交叉验证"
+    },
+    {
+      "Name": "过拟合",
+      "Type": "Concept",
+      "Definition": "学习时选择的模型包含的参数过多，以至于模型对已知数据预测得很好，但对未知数据预测很差的现象。",
+      "Formula": "无",
+      "Teaching_Note": "模型选择旨在避免过拟合。",
+      "Source": "CH01-过拟合与模型选择"
+    },
+    {
+      "Name": "模型选择",
+      "Type": "Task",
+      "Definition": "从假设空间中选出最优模型的过程，旨在避免过拟合并提高泛化能力。",
+      "Formula": "无",
+      "Teaching_Note": "常用方法：正则化与交叉验证。",
+      "Source": "CH01-模型评估与模型选择"
+    },
+    {
+      "Name": "训练误差",
+      "Type": "Evaluation",
+      "Definition": "模型在训练数据集上的平均损失。",
+      "Formula": "无",
+      "Teaching_Note": "等同于经验风险。",
+      "Source": "CH01-训练误差与测试误差"
+    },
+    {
+      "Name": "测试误差",
+      "Type": "Evaluation",
+      "Definition": "模型在测试数据集上的平均损失。",
+      "Formula": "无",
+      "Teaching_Note": "测试误差通常用来评估学习方法的泛化能力。",
+      "Source": "CH01-训练误差与测试误差"
+    },
+    {
+      "Name": "泛化误差",
+      "Type": "Math",
+      "Definition": "学习到的模型对未知数据的期望风险。",
+      "Formula": "$R_{exp}(f)=E_p[L(Y, f(X))]$",
+      "Teaching_Note": "泛化误差就是所学习到的模型的期望风险，即风险函数。",
+      "Source": "CH01-泛化能力"
+    },
+    {
+      "Name": "泛化误差上界",
+      "Type": "Math",
+      "Definition": "泛化误差的概率上界，用于理论分析学习方法的泛化能力。",
+      "Formula": "无",
+      "Teaching_Note": "性质：样本容量增加时上界趋于0；假设空间容量越大上界越大。",
+      "Source": "CH01-泛化误差上界"
+    },
+    {
+      "Name": "生成模型",
+      "Type": "Model",
+      "Definition": "由数据学习联合概率分布P(X,Y)，然后求出条件概率分布P(Y|X)作为预测模型。",
+      "Formula": "$P(Y|X)=\\frac{P(X,Y)}{P(X)}$",
+      "Teaching_Note": "收敛速度快，可处理隐变量。在监督学习中，概率模型是生成模型。",
+      "Source": "CH01-生成模型与判别模型"
+    },
+    {
+      "Name": "判别模型",
+      "Type": "Model",
+      "Definition": "直接学习决策函数f(X)或条件概率分布P(Y|X)作为预测模型。",
+      "Formula": "无",
+      "Teaching_Note": "直接面对预测，准确率往往更高，可进行特征抽象。在监督学习中，非概率模型是判别模型。",
+      "Source": "CH01-生成模型与判别模型"
+    },
+    {
+      "Name": "分类问题",
+      "Type": "Task",
+      "Definition": "输出变量为有限个离散变量的预测问题，包括二分类和多分类。",
+      "Formula": "无",
+      "Teaching_Note": "监督学习的主要应用之一。",
+      "Source": "CH01-分类问题"
+    },
+    {
+      "Name": "标注问题",
+      "Type": "Task",
+      "Definition": "输入是一个观测序列，输出是一个标记序列或状态序列的预测问题。",
+      "Formula": "无",
+      "Teaching_Note": "常用于词性标注、信息抽取等。",
+      "Source": "CH01-标注问题"
+    },
+    {
+      "Name": "回归问题",
+      "Type": "Task",
+      "Definition": "输入变量和输出变量均为连续变量的预测问题。",
+      "Formula": "$Y=\\hat f(X)$",
+      "Teaching_Note": "无",
+      "Source": "CH01-回归问题"
+    },
+    {
+      "Name": "概率模型",
+      "Type": "Model",
+      "Definition": "以概率分布的形式描述模型的取值。",
+      "Formula": "无",
+      "Teaching_Note": "在监督学习中，概率模型是生成模型。",
+      "Source": "CH01-按模型分类"
+    },
+    {
+      "Name": "非概率模型",
+      "Type": "Model",
+      "Definition": "以决策函数的形式描述模型，不直接使用概率分布。",
+      "Formula": "无",
+      "Teaching_Note": "在监督学习中，非概率模型是判别模型。",
+      "Source": "CH01-按模型分类"
+    },
+    {
+      "Name": "贝叶斯学习",
+      "Type": "Strategy",
+      "Definition": "将模型、未观测要素及其参数用变量表示，使用模型的先验分布进行推断的学习方法。",
+      "Formula": "无",
+      "Teaching_Note": "贝叶斯学习的特点：为模型引入先验分布。",
+      "Source": "CH01-贝叶斯学习"
+    },
+    {
+      "Name": "核方法",
+      "Type": "Strategy",
+      "Definition": "使用核函数将输入空间映射到高维特征空间，在特征空间进行线性学习的技巧。",
+      "Formula": "无",
+      "Teaching_Note": "无",
+      "Source": "CH01-核方法"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "极大似然估计",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "经验风险最小化",
+      "Context": "当模型是条件概率分布且损失函数是对数损失时"
+    },
+    {
+      "Head": "最大后验概率估计",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "结构风险最小化",
+      "Context": "当模型是条件概率分布、损失函数是对数损失、模型复杂度由模型的先验概率表示时"
+    },
+    {
+      "Head": "正则化",
+      "Relation": "APPLIED_TO",
+      "Tail": "模型选择",
+      "Context": "模型选择的典型方法是正则化"
+    },
+    {
+      "Head": "交叉验证",
+      "Relation": "APPLIED_TO",
+      "Tail": "模型选择",
+      "Context": "另一种常用的模型选择方法是交叉验证"
+    },
+    {
+      "Head": "生成模型",
+      "Relation": "COMPARE",
+      "Tail": "判别模型",
+      "Context": "监督学习方法可分为生成方法与判别方法，两者互为对比例子"
+    },
+    {
+      "Head": "概率模型",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "生成模型",
+      "Context": "在监督学习中，概率模型是生成模型"
+    },
+    {
+      "Head": "非概率模型",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "判别模型",
+      "Context": "在监督学习中，非概率模型是判别模型"
+    },
+    {
+      "Head": "风险函数",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "泛化误差",
+      "Context": "泛化误差就是所学习到的模型的期望风险，即风险函数"
+    },
+    {
+      "Head": "训练误差",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "经验风险",
+      "Context": "训练误差是模型关于训练数据集的平均损失，即经验风险"
+    },
+    {
+      "Head": "结构风险",
+      "Relation": "COMPRISE",
+      "Tail": "经验风险",
+      "Context": "结构风险在经验风险的基础上增加了正则化项"
+    },
+    {
+      "Head": "损失函数",
+      "Relation": "COMPRISE",
+      "Tail": "0-1损失函数",
+      "Context": "常用损失函数之一"
+    },
+    {
+      "Head": "损失函数",
+      "Relation": "COMPRISE",
+      "Tail": "平方损失函数",
+      "Context": "常用损失函数之一"
+    },
+    {
+      "Head": "损失函数",
+      "Relation": "COMPRISE",
+      "Tail": "绝对损失函数",
+      "Context": "常用损失函数之一"
+    },
+    {
+      "Head": "损失函数",
+      "Relation": "COMPRISE",
+      "Tail": "对数损失函数",
+      "Context": "常用损失函数之一"
+    },
+    {
+      "Head": "监督学习",
+      "Relation": "COMPRISE",
+      "Tail": "模型",
+      "Context": "统计学习方法三要素之一"
+    },
+    {
+      "Head": "监督学习",
+      "Relation": "COMPRISE",
+      "Tail": "策略",
+      "Context": "统计学习方法三要素之一"
+    },
+    {
+      "Head": "监督学习",
+      "Relation": "COMPRISE",
+      "Tail": "算法",
+      "Context": "统计学习方法三要素之一"
+    },
+    {
+      "Head": "统计学习",
+      "Relation": "COMPRISE",
+      "Tail": "监督学习",
+      "Context": "基本分类"
+    },
+    {
+      "Head": "统计学习",
+      "Relation": "COMPRISE",
+      "Tail": "无监督学习",
+      "Context": "基本分类"
+    },
+    {
+      "Head": "统计学习",
+      "Relation": "COMPRISE",
+      "Tail": "强化学习",
+      "Context": "基本分类"
+    },
+    {
+      "Head": "监督学习",
+      "Relation": "COMPRISE",
+      "Tail": "分类问题",
+      "Context": "监督学习的主要应用"
+    },
+    {
+      "Head": "监督学习",
+      "Relation": "COMPRISE",
+      "Tail": "标注问题",
+      "Context": "监督学习的主要应用"
+    },
+    {
+      "Head": "监督学习",
+      "Relation": "COMPRISE",
+      "Tail": "回归问题",
+      "Context": "监督学习的主要应用"
+    }
+  ]
+}

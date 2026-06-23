@@ -1,0 +1,158 @@
+{
+  "nodes": [
+    {
+      "Name": "无监督学习",
+      "Type": "Task",
+      "Definition": "从无标注数据中学习模型的机器学习范式，旨在发现数据中的隐藏结构或规律。基本问题包括聚类、降维和概率模型估计。",
+      "Formula": "无",
+      "Teaching_Note": "无监督学习通常需要大量数据，因为对数据隐藏规律的发现需要足够的观测。可作数据分析或监督学习的前处理。",
+      "Source": "CH13-无监督学习基本原理"
+    },
+    {
+      "Name": "聚类",
+      "Type": "Task",
+      "Definition": "一种无监督学习任务，将样本集合划分为由类似样本组成的多个类或簇，以发现数据中的纵向结构。",
+      "Formula": "硬聚类：$z=g_{\\theta}(x)$；软聚类：$P_{\\theta}(z\\mid x)$",
+      "Teaching_Note": "硬聚类给出确定的类别标签，软聚类给出属于各类的概率。高斯混合模型是一种软聚类方法。",
+      "Source": "CH13-聚类"
+    },
+    {
+      "Name": "降维",
+      "Type": "Task",
+      "Definition": "一种无监督学习任务，将高维数据转换为低维表示，同时尽可能保留原始数据中的信息，以发现数据中的横向结构。",
+      "Formula": "$z=g_{\\theta}(x)$，其中$x$为高维向量，$z$为低维向量",
+      "Teaching_Note": "降维函数$g$可以是线性的（如PCA）或非线性的（如流形学习）。",
+      "Source": "CH13-降维"
+    },
+    {
+      "Name": "概率模型估计",
+      "Type": "Task",
+      "Definition": "一种无监督学习任务，假设数据由一个概率模型生成，从数据中学习该概率模型的结构和参数，以最大化生成观测数据的概率。",
+      "Formula": "$P_{\\theta}(x\\mid z)$，其中$z$为隐变量",
+      "Teaching_Note": "概率模型估计可以看成生成模型的无监督学习。当先验均匀时，后验$P_{\\theta}(z\\mid x)$与似然$P_{\\theta}(x\\mid z)$成正比。",
+      "Source": "CH13-概率模型估计"
+    },
+    {
+      "Name": "硬聚类",
+      "Type": "Concept",
+      "Definition": "聚类的一种形式，将每个样本明确地划分到某一个确定的类别中，输出为离散的类别标签。",
+      "Formula": "$z=g_{\\theta}(x)$",
+      "Teaching_Note": "K均值聚类是硬聚类的代表方法。",
+      "Source": "CH13-聚类"
+    },
+    {
+      "Name": "软聚类",
+      "Type": "Concept",
+      "Definition": "聚类的一种形式，输出样本属于每个类别的概率，而不是唯一的类别标签。",
+      "Formula": "$P_{\\theta}(z\\mid x)$",
+      "Teaching_Note": "软聚类可视为概率模型估计问题，与硬聚类相对。",
+      "Source": "CH13-聚类"
+    },
+    {
+      "Name": "条件概率分布",
+      "Type": "Math",
+      "Definition": "表示在某一随机变量取特定值的条件下，另一随机变量的概率分布。在无监督学习中，软聚类使用$P_{\\theta}(z\\mid x)$，概率模型估计使用$P_{\\theta}(x\\mid z)$。",
+      "Formula": "$P(Y\\mid X)$",
+      "Teaching_Note": "无监督学习模型既可以是条件概率分布$P_{\\theta}(z\\mid x)$，也可以是$P_{\\theta}(x\\mid z)$。",
+      "Source": "CH13-机器学习三要素"
+    },
+    {
+      "Name": "梯度下降",
+      "Type": "Algorithm",
+      "Definition": "一种最优化算法，沿着目标函数梯度的反方向迭代更新参数，以逐步逼近局部或全局极小值。",
+      "Formula": "$\\theta \\leftarrow \\theta - \\eta \\nabla L(\\theta)$",
+      "Teaching_Note": "在无监督学习中常用于极小化聚类损失、降维的重构误差等。",
+      "Source": "CH13-机器学习三要素"
+    },
+    {
+      "Name": "话题分析",
+      "Type": "Task",
+      "Definition": "一种无监督学习方法，通过对文本数据进行建模，发现其中隐含的主题结构。常见方法有LSA、PLSA和LDA。",
+      "Formula": "无",
+      "Teaching_Note": "话题分析广泛应用于文本挖掘和信息检索。",
+      "Source": "CH13-话题分析"
+    },
+    {
+      "Name": "图分析",
+      "Type": "Task",
+      "Definition": "一种无监督学习方法，以图结构表示数据，发现隐藏在图中的统计规律或潜在结构。代表性算法为PageRank。",
+      "Formula": "无",
+      "Teaching_Note": "图分析在万维网链接分析中应用广泛。",
+      "Source": "CH13-图分析"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "无监督学习",
+      "Relation": "COMPRISE",
+      "Tail": "聚类",
+      "Context": "聚类是无监督学习的基本问题之一。"
+    },
+    {
+      "Head": "无监督学习",
+      "Relation": "COMPRISE",
+      "Tail": "降维",
+      "Context": "降维是无监督学习的基本问题之一。"
+    },
+    {
+      "Head": "无监督学习",
+      "Relation": "COMPRISE",
+      "Tail": "概率模型估计",
+      "Context": "概率模型估计是无监督学习的基本问题之一。"
+    },
+    {
+      "Head": "无监督学习",
+      "Relation": "COMPRISE",
+      "Tail": "话题分析",
+      "Context": "话题分析是一种重要的无监督学习方法。"
+    },
+    {
+      "Head": "无监督学习",
+      "Relation": "COMPRISE",
+      "Tail": "图分析",
+      "Context": "图分析是一种重要的无监督学习方法。"
+    },
+    {
+      "Head": "聚类",
+      "Relation": "COMPRISE",
+      "Tail": "硬聚类",
+      "Context": "聚类可以分为硬聚类和软聚类两种形式。"
+    },
+    {
+      "Head": "聚类",
+      "Relation": "COMPRISE",
+      "Tail": "软聚类",
+      "Context": "聚类可以分为硬聚类和软聚类两种形式。"
+    },
+    {
+      "Head": "软聚类",
+      "Relation": "PREREQUISITE",
+      "Tail": "条件概率分布",
+      "Context": "软聚类模型采用条件概率分布$P_{\\theta}(z\\mid x)$表示。"
+    },
+    {
+      "Head": "概率模型估计",
+      "Relation": "PREREQUISITE",
+      "Tail": "条件概率分布",
+      "Context": "概率模型估计通过学习条件概率分布$P_{\\theta}(x\\mid z)$来建模数据生成过程。"
+    },
+    {
+      "Head": "软聚类",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "概率模型估计",
+      "Context": "当假设隐变量先验均匀分布时，软聚类的后验概率与概率模型估计的似然函数成正比，二者等价。"
+    },
+    {
+      "Head": "降维",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "梯度下降",
+      "Context": "降维方法通常使用梯度下降等迭代算法极小化重构误差或信息损失。"
+    },
+    {
+      "Head": "无监督学习",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "梯度下降",
+      "Context": "无监督学习中许多方法采用梯度下降或其变体进行优化。"
+    }
+  ]
+}

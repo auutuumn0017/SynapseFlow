@@ -1,0 +1,188 @@
+{
+  "nodes": [
+    {
+      "Name": "提升方法",
+      "Type": "Strategy",
+      "Definition": "一种常用的统计学习方法，通过改变训练数据的权值分布，学习一系列弱分类器，并将它们线性组合成一个强分类器，以提升分类性能。",
+      "Formula": "无",
+      "Teaching_Note": "Boosting不容易过拟合。基本思想源于PAC学习框架中强可学习与弱可学习的等价性。",
+      "Source": "CH08-提升方法的基本思路"
+    },
+    {
+      "Name": "AdaBoost算法",
+      "Type": "Algorithm",
+      "Definition": "一种典型的提升算法，通过改变训练数据权值分布，使得每一轮迭代关注上一轮误分类的样本；将弱分类器加权组合成最终强分类器，系数由各分类器误差率决定。",
+      "Formula": "最终分类器：$G(x)=\\text{sign}\\left(\\sum_{m=1}^M\\alpha_m G_m(x)\\right)$；系数：$\\alpha_m=\\frac{1}{2}\\log\\frac{1-e_m}{e_m}$；权值更新：$w_{m+1,i}=\\frac{w_{mi}}{Z_m}\\exp(-\\alpha_m y_i G_m(x_i))$",
+      "Teaching_Note": "AdaBoost不需要知道弱学习器的误差下界，这是其与早期Boosting算法的区别。误差率$e_m$使用权值分布加权计算。",
+      "Source": "CH08-AdaBoost算法"
+    },
+    {
+      "Name": "前向分步算法",
+      "Type": "Algorithm",
+      "Definition": "一种求解加法模型的优化算法，每一步从前向后，只学习一个基函数及其系数，逐步逼近最优解，固定已学模型，仅优化当前基函数参数和系数。",
+      "Formula": "$(\\beta_m,\\gamma_m)=\\arg\\min_{\\beta,\\gamma}\\sum_{i=1}^N L(y_i, f_{m-1}(x_i)+\\beta b(x_i;\\gamma))$；更新$f_m(x)=f_{m-1}(x)+\\beta_m b(x;\\gamma_m)$",
+      "Teaching_Note": "AdaBoost可以看作前向分步算法在加法模型且损失为指数损失时的特例。",
+      "Source": "CH08-前向分步算法"
+    },
+    {
+      "Name": "加法模型",
+      "Type": "Model",
+      "Definition": "形如$f(x)=\\sum_{m=1}^M\\beta_m b(x;\\gamma_m)$的模型，其中$b(x;\\gamma_m)$为基函数，$\\beta_m$为基函数系数，$\\gamma_m$为基函数参数。",
+      "Formula": "$f(x)=\\sum_{m=1}^M\\beta_m b(x;\\gamma_m)$",
+      "Teaching_Note": "提升方法采用加法模型，基函数可以是各种分类器或回归树。",
+      "Source": "CH08-加法模型"
+    },
+    {
+      "Name": "指数损失函数",
+      "Type": "Math",
+      "Definition": "形如$L(y,f(x))=\\exp(-y f(x))$的损失函数，是0-1损失的上界，AdaBoost以指数损失为目标函数。",
+      "Formula": "$L(y,f(x))=\\exp(-y f(x))$",
+      "Teaching_Note": "指数损失与逻辑斯谛损失不同，对误分类样本惩罚更重。",
+      "Source": "CH08-AdaBoost算法的解释"
+    },
+    {
+      "Name": "提升树",
+      "Type": "Model",
+      "Definition": "以决策树为基函数的提升方法，通过加法模型组合多棵决策树，可用于分类和回归。",
+      "Formula": "$f_M(x)=\\sum_{m=1}^M T(x;\\Theta_m)$",
+      "Teaching_Note": "回归提升树采用平方损失拟合残差；分类提升树采用指数损失；一般损失时可用梯度提升。",
+      "Source": "CH08-提升树"
+    },
+    {
+      "Name": "梯度提升",
+      "Type": "Algorithm",
+      "Definition": "一种提升树的学习方法，用损失函数的负梯度在当前模型的值近似回归问题中的残差，从而可扩展到任意可微损失函数。",
+      "Formula": "负梯度：$r_{mi}=-\\left[\\frac{\\partial L(y_i, f(x_i))}{\\partial f(x_i)}\\right]_{f(x)=f_{m-1}(x)}$；更新：$f_m(x)=f_{m-1}(x)+\\sum_{j}c_{mj}I(x\\in R_{mj})$",
+      "Teaching_Note": "GBDT的核心思想是用负梯度代替残差，以拟合回归树。",
+      "Source": "CH08-梯度提升"
+    },
+    {
+      "Name": "残差",
+      "Type": "Math",
+      "Definition": "在回归提升树中，当前模型预测值与真实值之差，作为下一棵树拟合的目标。",
+      "Formula": "$r_{mi}=y_i - f_{m-1}(x_i)$",
+      "Teaching_Note": "残差拟合的思想使得提升树可以逐步减少训练误差。",
+      "Source": "CH08-提升树算法"
+    },
+    {
+      "Name": "弱学习器",
+      "Type": "Concept",
+      "Definition": "学习正确率仅比随机猜测略好的学习算法，提升方法组合多个弱学习器构成强学习器。",
+      "Formula": "无",
+      "Teaching_Note": "PAC学习框架下，强可学习等价于弱可学习。",
+      "Source": "CH08-提升方法的基本思路"
+    },
+    {
+      "Name": "强学习器",
+      "Type": "Concept",
+      "Definition": "具有高准确率的学习算法，提升方法的目标是将弱学习器提升为强学习器。",
+      "Formula": "无",
+      "Teaching_Note": "无",
+      "Source": "CH08-提升方法的基本思路"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "提升方法",
+      "Relation": "COMPRISE",
+      "Tail": "AdaBoost算法",
+      "Context": "AdaBoost是提升方法的具体实现。"
+    },
+    {
+      "Head": "提升方法",
+      "Relation": "COMPRISE",
+      "Tail": "提升树",
+      "Context": "提升树是提升方法以决策树为基函数的实例。"
+    },
+    {
+      "Head": "提升方法",
+      "Relation": "PREREQUISITE",
+      "Tail": "弱学习器",
+      "Context": "提升方法基于弱学习算法。"
+    },
+    {
+      "Head": "提升方法",
+      "Relation": "PREREQUISITE",
+      "Tail": "强学习器",
+      "Context": "提升方法的目标是生成强学习器。"
+    },
+    {
+      "Head": "加法模型",
+      "Relation": "COMPRISE",
+      "Tail": "提升树",
+      "Context": "提升树模型是加法模型的特例，基函数为决策树。"
+    },
+    {
+      "Head": "前向分步算法",
+      "Relation": "APPLIED_TO",
+      "Tail": "加法模型",
+      "Context": "前向分步算法是求解加法模型的通用方法。"
+    },
+    {
+      "Head": "AdaBoost算法",
+      "Relation": "PREREQUISITE",
+      "Tail": "前向分步算法",
+      "Context": "AdaBoost可看作前向分步算法使用指数损失的特例。"
+    },
+    {
+      "Head": "AdaBoost算法",
+      "Relation": "PREREQUISITE",
+      "Tail": "指数损失函数",
+      "Context": "AdaBoost的目标函数为指数损失。"
+    },
+    {
+      "Head": "损失函数",
+      "Relation": "COMPRISE",
+      "Tail": "指数损失函数",
+      "Context": "指数损失是损失函数的一种。"
+    },
+    {
+      "Head": "提升树",
+      "Relation": "PREREQUISITE",
+      "Tail": "决策树",
+      "Context": "提升树以决策树为基函数。"
+    },
+    {
+      "Head": "提升树",
+      "Relation": "APPLIED_TO",
+      "Tail": "回归问题",
+      "Context": "回归提升树使用平方损失拟合残差。"
+    },
+    {
+      "Head": "提升树",
+      "Relation": "APPLIED_TO",
+      "Tail": "分类问题",
+      "Context": "分类提升树使用指数损失等。"
+    },
+    {
+      "Head": "梯度提升",
+      "Relation": "PREREQUISITE",
+      "Tail": "提升树",
+      "Context": "梯度提升是提升树用于一般损失函数的扩展。"
+    },
+    {
+      "Head": "梯度提升",
+      "Relation": "PREREQUISITE",
+      "Tail": "残差",
+      "Context": "梯度提升用负梯度近似残差进行拟合。"
+    },
+    {
+      "Head": "残差",
+      "Relation": "APPLIED_TO",
+      "Tail": "提升树",
+      "Context": "回归提升树每一轮拟合当前模型的残差。"
+    },
+    {
+      "Head": "AdaBoost算法",
+      "Relation": "COMPARE",
+      "Tail": "支持向量机",
+      "Context": "两者都基于间隔理论，但AdaBoost的间隔与SVM的几何间隔不同。"
+    },
+    {
+      "Head": "AdaBoost算法",
+      "Relation": "COMPARE",
+      "Tail": "逻辑斯谛回归模型",
+      "Context": "两者通过Bregman散度建立联系，损失函数不同。"
+    }
+  ]
+}

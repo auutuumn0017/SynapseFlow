@@ -1,0 +1,172 @@
+{
+  "nodes": [
+    {
+      "Name": "感知机",
+      "Type": "Model",
+      "Definition": "感知机是二类分类的线性分类模型，属于判别模型。输入为实例的特征向量，输出为实例的类别（+1和-1）。感知机对应于输入空间中将实例划分为正负两类的分离超平面。",
+      "Formula": "$f(x)=\\text{sign}(w \\cdot x + b)$",
+      "Teaching_Note": "感知机是神经网络和支持向量机的基础，激活函数为符号函数。",
+      "Source": "CH02-感知机模型"
+    },
+    {
+      "Name": "线性可分数据集",
+      "Type": "Concept",
+      "Definition": "给定一个数据集，如果存在某个超平面能够将数据集的正实例点和负实例点完全正确地划分到超平面的两侧，则称该数据集为线性可分数据集。",
+      "Formula": "无",
+      "Teaching_Note": "感知机学习的前提是训练数据集线性可分，否则算法不收敛。",
+      "Source": "CH02-数据集的线性可分性"
+    },
+    {
+      "Name": "感知机损失函数",
+      "Type": "Math",
+      "Definition": "感知机学习采用的损失函数，定义为所有误分类点到超平面的函数间隔之和的相反数，忽略1/||w||。",
+      "Formula": "$L(w,b)=-\\sum_{x_i\\in M}y_i(w\\cdot x_i+b)$，其中$M$为误分类点集合",
+      "Teaching_Note": "等价于合页损失的一种形式$\\max(0, -y_i(w\\cdot x_i+b))$。损失函数是参数w,b的连续可导函数，易于优化。",
+      "Source": "CH02-感知机学习策略"
+    },
+    {
+      "Name": "感知机学习算法原始形式",
+      "Type": "Algorithm",
+      "Definition": "通过随机梯度下降法极小化感知机损失函数，每次选取一个误分类点更新权重向量w和偏置b，直至训练集中无误分类点。",
+      "Formula": "$w \\leftarrow w + \\eta y_i x_i$；$b \\leftarrow b + \\eta y_i$",
+      "Teaching_Note": "可合并偏置为扩充权重向量，初值与误分类点选取顺序不同会导致解不同。",
+      "Source": "CH02-感知机学习算法的原始形式"
+    },
+    {
+      "Name": "感知机学习算法对偶形式",
+      "Type": "Algorithm",
+      "Definition": "将w和b表示为实例x_i和标记y_i的线性组合，学习组合系数α，利用Gram矩阵计算内积，通过更新α和b求解感知机。",
+      "Formula": "$f(x)=\\text{sign}\\left(\\sum_{j=1}^N\\alpha_j y_j x_j\\cdot x + b\\right)$；更新：$\\alpha_i \\leftarrow \\alpha_i + \\eta$；$b \\leftarrow b + \\eta y_i$",
+      "Teaching_Note": "α_i表示第i个实例被误分类的次数乘以学习率。",
+      "Source": "CH02-感知机学习算法的对偶形式"
+    },
+    {
+      "Name": "Gram矩阵",
+      "Type": "Math",
+      "Definition": "训练集中所有实例两两内积构成的矩阵，用于感知机对偶形式的快速计算。",
+      "Formula": "$G=[x_i\\cdot x_j]_{N\\times N}$",
+      "Teaching_Note": "无",
+      "Source": "CH02-Gram matrix"
+    },
+    {
+      "Name": "分离超平面",
+      "Type": "Concept",
+      "Definition": "在特征空间中将正负实例分开的超平面，由法向量w和截距b决定，对应于感知机的决策边界。",
+      "Formula": "$w\\cdot x + b = 0$",
+      "Teaching_Note": "法向量指向的一侧为正类，另一侧为负类。",
+      "Source": "CH02-感知机模型"
+    },
+    {
+      "Name": "函数间隔",
+      "Type": "Math",
+      "Definition": "样本点(x_i,y_i)到超平面(w,b)的函数间隔定义为$y_i(w\\cdot x_i+b)$，表示分类的正确性和确信度。",
+      "Formula": "$\\hat\\gamma_i = y_i(w\\cdot x_i+b)$",
+      "Teaching_Note": "感知机损失函数中的$-y_i(w\\cdot x_i+b)$即负的函数间隔。",
+      "Source": "CH02-感知机学习策略"
+    },
+    {
+      "Name": "几何间隔",
+      "Type": "Math",
+      "Definition": "样本点到超平面的归一化距离，即函数间隔除以$||w||$。",
+      "Formula": "$\\gamma_i = \\frac{y_i(w\\cdot x_i+b)}{||w||}$",
+      "Teaching_Note": "几何间隔不会因w和b的等比例缩放而改变，是点到超平面的真实距离。",
+      "Source": "CH02-损失函数选择"
+    },
+    {
+      "Name": "学习率",
+      "Type": "Concept",
+      "Definition": "梯度下降等优化算法中控制参数更新步长的超参数。",
+      "Formula": "$\\eta$",
+      "Teaching_Note": "感知机算法中$0<\\eta\\leq 1$，例子中常取1以简化。",
+      "Source": "CH02-感知机学习算法"
+    },
+    {
+      "Name": "Novikoff定理",
+      "Type": "Concept",
+      "Definition": "关于感知机算法收敛性的定理：对于线性可分数据集，感知机学习算法原始形式经过有限次迭代后收敛，得到一个完全正确划分训练集的分离超平面。",
+      "Formula": "无",
+      "Teaching_Note": "定理给出了误分类次数的上界。",
+      "Source": "CH02-算法的收敛性"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "非概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "感知机",
+      "Context": "感知机是线性分类模型，属于非概率模型即判别模型。"
+    },
+    {
+      "Head": "感知机",
+      "Relation": "APPLIED_TO",
+      "Tail": "分类问题",
+      "Context": "感知机用于二类分类问题。"
+    },
+    {
+      "Head": "损失函数",
+      "Relation": "COMPRISE",
+      "Tail": "感知机损失函数",
+      "Context": "感知机损失函数是一种具体的损失函数。"
+    },
+    {
+      "Head": "感知机",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "经验风险最小化",
+      "Context": "感知机的学习策略是经验风险最小化。"
+    },
+    {
+      "Head": "感知机",
+      "Relation": "COMPRISE",
+      "Tail": "感知机学习算法原始形式",
+      "Context": "感知机的一种学习算法。"
+    },
+    {
+      "Head": "感知机",
+      "Relation": "COMPRISE",
+      "Tail": "感知机学习算法对偶形式",
+      "Context": "感知机的一种学习算法，通过求解对偶问题学习。"
+    },
+    {
+      "Head": "感知机学习算法对偶形式",
+      "Relation": "APPLIED_TO",
+      "Tail": "Gram矩阵",
+      "Context": "对偶形式利用Gram矩阵存储内积以加速计算。"
+    },
+    {
+      "Head": "感知机损失函数",
+      "Relation": "PREREQUISITE",
+      "Tail": "函数间隔",
+      "Context": "感知机损失函数基于误分类点的函数间隔定义。"
+    },
+    {
+      "Head": "感知机",
+      "Relation": "PREREQUISITE",
+      "Tail": "线性可分数据集",
+      "Context": "感知机学习的收敛性前提是训练数据集线性可分。"
+    },
+    {
+      "Head": "几何间隔",
+      "Relation": "COMPARE",
+      "Tail": "函数间隔",
+      "Context": "几何间隔是函数间隔除以||w||，消除了法向量缩放的影响，更能反映点到超平面的真实距离。"
+    },
+    {
+      "Head": "感知机",
+      "Relation": "COMPRISE",
+      "Tail": "分离超平面",
+      "Context": "感知机模型对应于特征空间中的一个分离超平面。"
+    },
+    {
+      "Head": "感知机学习算法原始形式",
+      "Relation": "COMPRISE",
+      "Tail": "学习率",
+      "Context": "学习率是感知机算法迭代步长的超参数。"
+    },
+    {
+      "Head": "感知机学习算法原始形式",
+      "Relation": "PREREQUISITE",
+      "Tail": "Novikoff定理",
+      "Context": "Novikoff定理保证了对于线性可分数据集，原始形式算法在有限步内收敛。"
+    }
+  ]
+}

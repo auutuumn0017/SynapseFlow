@@ -1,0 +1,164 @@
+{
+  "nodes": [
+    {
+      "Name": "朴素贝叶斯法",
+      "Type": "Algorithm",
+      "Definition": "朴素贝叶斯法是基于贝叶斯定理与特征条件独立假设的分类方法。首先学习输入输出的联合概率分布，然后基于此模型，对给定的输入，利用贝叶斯定理求出后验概率最大的输出。",
+      "Formula": "$y = \\arg\\max_{c_k} P(Y=c_k) \\prod_{j=1}^n P(X^{(j)}=x^{(j)}|Y=c_k)$",
+      "Teaching_Note": "朴素贝叶斯法是典型的生成模型。条件独立假设使参数数量从指数级降为线性级。",
+      "Source": "CH04-朴素贝叶斯法的学习与分类"
+    },
+    {
+      "Name": "贝叶斯定理",
+      "Type": "Math",
+      "Definition": "描述两个条件概率之间关系的定理，提供了计算后验概率的方法。",
+      "Formula": "$P(Y|X) = \\frac{P(X|Y)P(Y)}{P(X)}$",
+      "Teaching_Note": "无",
+      "Source": "CH04-朴素贝叶斯法"
+    },
+    {
+      "Name": "条件独立假设",
+      "Type": "Concept",
+      "Definition": "朴素贝叶斯法对条件概率分布所作的一个简化假设：用于分类的特征在类确定的条件下都是条件独立的。",
+      "Formula": "$P(X=x|Y=c_k) = \\prod_{j=1}^n P(X^{(j)}=x^{(j)}|Y=c_k)$",
+      "Teaching_Note": "该假设使模型易于估计，但牺牲了特征间的依赖信息。",
+      "Source": "CH04-条件独立假设"
+    },
+    {
+      "Name": "后验概率最大化",
+      "Type": "Strategy",
+      "Definition": "朴素贝叶斯法采用的分类决策规则：将实例分到后验概率最大的类中，这等价于在0-1损失函数下的期望风险最小化。",
+      "Formula": "$y = \\arg\\max_{c_k} P(Y=c_k|X=x)$",
+      "Teaching_Note": "后验概率最大化保证了0-1损失下的期望风险最小。",
+      "Source": "CH04-后验概率最大化的含义"
+    },
+    {
+      "Name": "期望风险最小化",
+      "Type": "Strategy",
+      "Definition": "模型选择的一个准则：选择使期望风险（模型关于真实联合分布的平均损失）最小的模型。",
+      "Formula": "无",
+      "Teaching_Note": "朴素贝叶斯法的后验概率最大化在0-1损失下等价于期望风险最小化。",
+      "Source": "CH04-后验概率最大化的含义"
+    },
+    {
+      "Name": "贝叶斯估计",
+      "Type": "Algorithm",
+      "Definition": "朴素贝叶斯法中一种参数估计方法，在极大似然估计基础上增加平滑项$\\lambda$，以避免因训练样本不足导致的概率为零问题。",
+      "Formula": "$P_{\\lambda}(X^{(j)}=a_{jl}|Y=c_k)=\\frac{\\sum_{i=1}^N I(x_i^{(j)}=a_{jl},y_i=c_k)+\\lambda}{\\sum_{i=1}^N I(y_i=c_k)+S_j\\lambda}$",
+      "Teaching_Note": "当$\\lambda=0$时为极大似然估计；当$\\lambda=1$时为拉普拉斯平滑。",
+      "Source": "CH04-贝叶斯估计"
+    },
+    {
+      "Name": "拉普拉斯平滑",
+      "Type": "Math",
+      "Definition": "一种特殊的贝叶斯估计，取$\\lambda=1$，对每个可能取值计数都加1，避免后验概率为零。",
+      "Formula": "$P_1(X^{(j)}=a_{jl}|Y=c_k)=\\frac{\\sum_{i} I(x_i^{(j)}=a_{jl},y_i=c_k)+1}{\\sum_{i} I(y_i=c_k)+S_j}$",
+      "Teaching_Note": "拉普拉斯平滑相当于为未出现的特征值赋予了先验概率。",
+      "Source": "CH04-贝叶斯估计"
+    },
+    {
+      "Name": "先验概率",
+      "Type": "Math",
+      "Definition": "在没有任何额外信息时，对类别$Y$的概率估计，即$P(Y=c_k)$。",
+      "Formula": "$P(Y=c_k)$",
+      "Teaching_Note": "通过训练数据中各类别的频率估计得到。",
+      "Source": "CH04-极大似然估计"
+    },
+    {
+      "Name": "树增强朴素贝叶斯",
+      "Type": "Model",
+      "Definition": "朴素贝叶斯的一种扩展模型，放松了特征条件独立假设，允许特征之间存在树形依赖关系。",
+      "Formula": "无",
+      "Teaching_Note": "TAN是朴素贝叶斯到贝叶斯网的过渡。",
+      "Source": "CH04-扩展"
+    },
+    {
+      "Name": "贝叶斯网",
+      "Type": "Model",
+      "Definition": "利用有向无环图表示变量之间概率依赖关系的图模型，是更一般的概率图模型。",
+      "Formula": "无",
+      "Teaching_Note": "朴素贝叶斯是贝叶斯网的一个特例。",
+      "Source": "CH04-扩展"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "生成模型",
+      "Relation": "COMPRISE",
+      "Tail": "朴素贝叶斯法",
+      "Context": "朴素贝叶斯法是典型的生成模型。"
+    },
+    {
+      "Head": "朴素贝叶斯法",
+      "Relation": "PREREQUISITE",
+      "Tail": "贝叶斯定理",
+      "Context": "朴素贝叶斯法基于贝叶斯定理计算后验概率。"
+    },
+    {
+      "Head": "朴素贝叶斯法",
+      "Relation": "PREREQUISITE",
+      "Tail": "条件独立假设",
+      "Context": "朴素贝叶斯法对条件概率分布作了特征条件独立假设。"
+    },
+    {
+      "Head": "朴素贝叶斯法",
+      "Relation": "COMPRISE",
+      "Tail": "后验概率最大化",
+      "Context": "后验概率最大化是朴素贝叶斯法的分类决策规则。"
+    },
+    {
+      "Head": "后验概率最大化",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "期望风险最小化",
+      "Context": "当损失函数是0-1损失时，后验概率最大化等价于期望风险最小化。"
+    },
+    {
+      "Head": "朴素贝叶斯法",
+      "Relation": "APPLIED_TO",
+      "Tail": "分类问题",
+      "Context": "朴素贝叶斯法可用于解决分类问题。"
+    },
+    {
+      "Head": "朴素贝叶斯法",
+      "Relation": "APPLIED_TO",
+      "Tail": "极大似然估计",
+      "Context": "朴素贝叶斯法中常用极大似然估计来估计先验概率和条件概率。"
+    },
+    {
+      "Head": "朴素贝叶斯法",
+      "Relation": "APPLIED_TO",
+      "Tail": "贝叶斯估计",
+      "Context": "贝叶斯估计作为朴素贝叶斯法中处理零概率的参数估计方法。"
+    },
+    {
+      "Head": "贝叶斯估计",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "极大似然估计",
+      "Context": "当平滑参数$\\lambda=0$时，贝叶斯估计退化为极大似然估计。"
+    },
+    {
+      "Head": "贝叶斯估计",
+      "Relation": "COMPRISE",
+      "Tail": "拉普拉斯平滑",
+      "Context": "当$\\lambda=1$时，贝叶斯估计即为拉普拉斯平滑。"
+    },
+    {
+      "Head": "朴素贝叶斯法",
+      "Relation": "COMPARE",
+      "Tail": "判别模型",
+      "Context": "朴素贝叶斯法是生成模型，与判别模型（如逻辑斯谛回归）形成对比。"
+    },
+    {
+      "Head": "树增强朴素贝叶斯",
+      "Relation": "PREREQUISITE",
+      "Tail": "朴素贝叶斯法",
+      "Context": "树增强朴素贝叶斯放宽了朴素贝叶斯的条件独立假设。"
+    },
+    {
+      "Head": "贝叶斯网",
+      "Relation": "COMPRISE",
+      "Tail": "朴素贝叶斯法",
+      "Context": "朴素贝叶斯法是贝叶斯网在特征条件独立假设下的特例。"
+    }
+  ]
+}

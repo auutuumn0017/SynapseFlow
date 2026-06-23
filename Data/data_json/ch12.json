@@ -1,0 +1,316 @@
+{
+  "nodes": [
+    {
+      "Name": "对数线性模型",
+      "Type": "Model",
+      "Definition": "一类模型，其对数条件概率或对数势函数可以表示为特征函数的线性组合。逻辑斯谛回归模型、最大熵模型和条件随机场均属于对数线性模型。",
+      "Formula": "$\\log P(y|x) = w \\cdot F(x,y) - \\log Z(x)$",
+      "Teaching_Note": "对数线性模型将乘积形式转化为线性组合，简化了参数估计。",
+      "Source": "CH12-模型"
+    },
+    {
+      "Name": "线性模型",
+      "Type": "Model",
+      "Definition": "模型函数为输入变量的线性组合，简单直观。感知机是线性模型的代表。",
+      "Formula": "$f(x) = w\\cdot x + b$",
+      "Teaching_Note": "线性模型是众多复杂模型的基础。",
+      "Source": "CH12-模型"
+    },
+    {
+      "Name": "非线性模型",
+      "Type": "Model",
+      "Definition": "模型函数为输入变量的非线性函数，能拟合更复杂的数据模式。k近邻、决策树、核支持向量机和提升方法均为非线性模型。",
+      "Formula": "无",
+      "Teaching_Note": "核技巧可将线性模型扩展为非线性模型。",
+      "Source": "CH12-模型"
+    },
+    {
+      "Name": "随机梯度下降",
+      "Type": "Algorithm",
+      "Definition": "一种优化算法，每次随机选取一个或一小批样本计算梯度并更新参数，计算效率高，适用于大规模数据。感知机、逻辑斯谛回归、最大熵模型及条件随机场均可使用此法学习。",
+      "Formula": "$\\theta \\leftarrow \\theta - \\eta \\nabla L(\\theta; x_i, y_i)$",
+      "Teaching_Note": "SGD在深度学习中也广泛使用。",
+      "Source": "CH12-学习算法"
+    },
+    {
+      "Name": "拟牛顿法",
+      "Type": "Algorithm",
+      "Definition": "一类迭代优化算法，通过近似计算Hessian矩阵的逆来更新参数，收敛速度快于普通梯度下降。最大熵模型和条件随机场的学习常采用BFGS等拟牛顿法。",
+      "Formula": "无",
+      "Teaching_Note": "拟牛顿法在高维参数空间中仍能保持较好性能。",
+      "Source": "CH12-学习算法"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "线性模型",
+      "Relation": "COMPRISE",
+      "Tail": "感知机",
+      "Context": "感知机是线性二类分类模型。"
+    },
+    {
+      "Head": "对数线性模型",
+      "Relation": "COMPRISE",
+      "Tail": "逻辑斯谛回归模型",
+      "Context": "逻辑斯谛回归模型属于对数线性模型。"
+    },
+    {
+      "Head": "对数线性模型",
+      "Relation": "COMPRISE",
+      "Tail": "最大熵模型",
+      "Context": "最大熵模型属于对数线性模型。"
+    },
+    {
+      "Head": "对数线性模型",
+      "Relation": "COMPRISE",
+      "Tail": "线性链条件随机场",
+      "Context": "条件随机场是对数线性模型在序列标注上的推广。"
+    },
+    {
+      "Head": "非线性模型",
+      "Relation": "COMPRISE",
+      "Tail": "k近邻法",
+      "Context": "k近邻法根据近邻距离决策，属于非线性模型。"
+    },
+    {
+      "Head": "非线性模型",
+      "Relation": "COMPRISE",
+      "Tail": "决策树",
+      "Context": "决策树按特征条件分支，构成非线性映射。"
+    },
+    {
+      "Head": "非线性模型",
+      "Relation": "COMPRISE",
+      "Tail": "支持向量机",
+      "Context": "引入核函数的支持向量机可实现非线性分类。"
+    },
+    {
+      "Head": "非线性模型",
+      "Relation": "COMPRISE",
+      "Tail": "提升方法",
+      "Context": "提升方法组合多个基分类器，整体为非线性模型。"
+    },
+    {
+      "Head": "生成模型",
+      "Relation": "COMPRISE",
+      "Tail": "朴素贝叶斯法",
+      "Context": "朴素贝叶斯通过学习联合概率分布生成模型。"
+    },
+    {
+      "Head": "生成模型",
+      "Relation": "COMPRISE",
+      "Tail": "隐马尔可夫模型",
+      "Context": "隐马尔可夫模型对观测序列和状态序列的联合概率建模，属于生成模型。"
+    },
+    {
+      "Head": "判别模型",
+      "Relation": "COMPRISE",
+      "Tail": "感知机",
+      "Context": "感知机直接学习决策函数。"
+    },
+    {
+      "Head": "判别模型",
+      "Relation": "COMPRISE",
+      "Tail": "k近邻法",
+      "Context": "k近邻法直接根据多数表决得到类别决策。"
+    },
+    {
+      "Head": "判别模型",
+      "Relation": "COMPRISE",
+      "Tail": "决策树",
+      "Context": "决策树直接输出分类决策。"
+    },
+    {
+      "Head": "判别模型",
+      "Relation": "COMPRISE",
+      "Tail": "逻辑斯谛回归模型",
+      "Context": "逻辑斯谛回归直接学习条件概率分布P(Y|X)。"
+    },
+    {
+      "Head": "判别模型",
+      "Relation": "COMPRISE",
+      "Tail": "最大熵模型",
+      "Context": "最大熵模型直接学习条件概率分布P(Y|X)。"
+    },
+    {
+      "Head": "判别模型",
+      "Relation": "COMPRISE",
+      "Tail": "支持向量机",
+      "Context": "支持向量机学习分离超平面作为决策函数。"
+    },
+    {
+      "Head": "判别模型",
+      "Relation": "COMPRISE",
+      "Tail": "提升方法",
+      "Context": "提升方法直接组合分类器形成判别决策。"
+    },
+    {
+      "Head": "判别模型",
+      "Relation": "COMPRISE",
+      "Tail": "线性链条件随机场",
+      "Context": "条件随机场直接对条件概率P(Y|X)建模。"
+    },
+    {
+      "Head": "概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "朴素贝叶斯法",
+      "Context": "NB由条件概率分布表示。"
+    },
+    {
+      "Head": "概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "隐马尔可夫模型",
+      "Context": "HMM由观测序列与状态序列的联合概率分布表示。"
+    },
+    {
+      "Head": "非概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "感知机",
+      "Context": "感知机用决策函数表示。"
+    },
+    {
+      "Head": "非概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "k近邻法",
+      "Context": "k近邻法用决策函数表示。"
+    },
+    {
+      "Head": "非概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "支持向量机",
+      "Context": "线性可分SVM用决策函数表示。"
+    },
+    {
+      "Head": "非概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "提升方法",
+      "Context": "提升方法用决策函数表示。"
+    },
+    {
+      "Head": "概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "决策树",
+      "Context": "决策树可以视为条件概率分布。"
+    },
+    {
+      "Head": "非概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "决策树",
+      "Context": "决策树也可以视为决策函数。"
+    },
+    {
+      "Head": "概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "逻辑斯谛回归模型",
+      "Context": "LR可视为条件概率分布。"
+    },
+    {
+      "Head": "非概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "逻辑斯谛回归模型",
+      "Context": "LR也可看作线性函数经Sigmoid的映射。"
+    },
+    {
+      "Head": "概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "最大熵模型",
+      "Context": "MaxEnt可视为条件概率分布。"
+    },
+    {
+      "Head": "非概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "最大熵模型",
+      "Context": "MaxEnt也可看作非概率的分类模型。"
+    },
+    {
+      "Head": "概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "线性链条件随机场",
+      "Context": "CRF可表示为条件概率分布。"
+    },
+    {
+      "Head": "非概率模型",
+      "Relation": "COMPRISE",
+      "Tail": "线性链条件随机场",
+      "Context": "CRF也可看作判别模型输出决策。"
+    },
+    {
+      "Head": "合页损失函数",
+      "Relation": "COMPARE",
+      "Tail": "0-1损失函数",
+      "Context": "合页损失是0-1损失的上界。"
+    },
+    {
+      "Head": "逻辑斯谛损失函数",
+      "Relation": "COMPARE",
+      "Tail": "0-1损失函数",
+      "Context": "逻辑斯谛损失是0-1损失的上界。"
+    },
+    {
+      "Head": "指数损失函数",
+      "Relation": "COMPARE",
+      "Tail": "0-1损失函数",
+      "Context": "指数损失是0-1损失的上界。"
+    },
+    {
+      "Head": "支持向量机",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "序列最小最优化算法",
+      "Context": "SVM求解凸二次规划常采用SMO算法。"
+    },
+    {
+      "Head": "逻辑斯谛回归模型",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "随机梯度下降",
+      "Context": "LR参数学习可使用SGD。"
+    },
+    {
+      "Head": "最大熵模型",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "拟牛顿法",
+      "Context": "最大熵模型学习常用拟牛顿法。"
+    },
+    {
+      "Head": "线性链条件随机场",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "拟牛顿法",
+      "Context": "条件随机场学习常用拟牛顿法。"
+    },
+    {
+      "Head": "感知机",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "随机梯度下降",
+      "Context": "感知机学习采用随机梯度下降。"
+    },
+    {
+      "Head": "提升方法",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "前向分步算法",
+      "Context": "提升方法采用前向分步算法逐个学习基函数。"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "Baum-Welch算法",
+      "Context": "HMM的无监督学习采用Baum-Welch算法（EM）。"
+    },
+    {
+      "Head": "线性链条件随机场",
+      "Relation": "COMPARE",
+      "Tail": "最大熵模型",
+      "Context": "条件随机场可以看成是分类问题的最大熵模型在序列标注问题上的推广。"
+    },
+    {
+      "Head": "朴素贝叶斯法",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "极大似然估计",
+      "Context": "朴素贝叶斯法监督学习可直接通过极大似然估计计算概率。"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "极大似然估计",
+      "Context": "HMM监督学习可直接通过极大似然估计计算参数。"
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "nodes": [
+    {
+      "Name": "潜在语义分析",
+      "Type": "Algorithm",
+      "Definition": "一种无监督学习方法，主要用于文本的话题分析，通过矩阵分解发现文本与单词之间基于话题的语义关系，将单词向量空间中的文本表示转换为话题向量空间中的低维表示。",
+      "Formula": "$X \\approx TY$",
+      "Teaching_Note": "潜在语义分析使用非概率话题分析模型，包括基于截断奇异值分解和基于非负矩阵分解两种算法。",
+      "Source": "CH17-潜在语义分析"
+    },
+    {
+      "Name": "单词向量空间",
+      "Type": "Concept",
+      "Definition": "由文本集合中所有单词张成的向量空间，每个文本表示为一个m维向量，各维对应单词的权重，通常为TF-IDF值。",
+      "Formula": "无",
+      "Teaching_Note": "单词向量空间不考虑同义性和多义性，向量稀疏。",
+      "Source": "CH17-单词向量空间"
+    },
+    {
+      "Name": "话题向量空间",
+      "Type": "Concept",
+      "Definition": "由k个话题向量张成的k维向量空间，每个话题向量是定义在单词集合上的m维向量，表示话题的语义内容。",
+      "Formula": "无",
+      "Teaching_Note": "话题向量空间的维数k通常远小于单词数m，文本可投影到此空间实现降维。",
+      "Source": "CH17-话题向量空间"
+    },
+    {
+      "Name": "单词-文本矩阵",
+      "Type": "Math",
+      "Definition": "一个m×n矩阵，元素x_{ij}表示单词w_i在文本d_j中出现的频数或TF-IDF权值，每一列对应一个文本在单词向量空间中的表示。",
+      "Formula": "$X=[x_{ij}]_{m\\times n}$",
+      "Teaching_Note": "通常为稀疏矩阵，m为单词数，n为文本数。",
+      "Source": "CH17-单词向量空间"
+    },
+    {
+      "Name": "单词-话题矩阵",
+      "Type": "Math",
+      "Definition": "一个m×k矩阵，列向量为话题向量，表示各个话题在单词空间上的分布。",
+      "Formula": "$T=[t_{il}]_{m\\times k}$",
+      "Teaching_Note": "在基于截断SVD的LSA中，$T=U_k$。",
+      "Source": "CH17-话题向量空间"
+    },
+    {
+      "Name": "话题-文本矩阵",
+      "Type": "Math",
+      "Definition": "一个k×n矩阵，列向量是各文本在话题向量空间中的坐标表示，即话题空间中的文本向量。",
+      "Formula": "$Y=[y_{lj}]_{k\\times n}$",
+      "Teaching_Note": "在基于截断SVD的LSA中，$Y=\\Sigma_k V_k^\\mathrm{T}$。",
+      "Source": "CH17-话题向量空间"
+    },
+    {
+      "Name": "非负矩阵分解",
+      "Type": "Algorithm",
+      "Definition": "一种矩阵分解方法，将非负矩阵X近似分解为两个非负矩阵W和H的乘积$X\\approx WH$，其中W的列向量可视为基向量，H的列向量为系数向量，分解结果具有局部构成整体的直观解释。",
+      "Formula": "$X \\approx WH, \\quad W \\geq 0, \\ H \\geq 0$",
+      "Teaching_Note": "NMF在潜在语义分析中用于获得非负的话题向量和文本表示。",
+      "Source": "CH17-非负矩阵分解"
+    },
+    {
+      "Name": "TF-IDF",
+      "Type": "Math",
+      "Definition": "一种衡量单词对文档重要程度的加权技术，由词频(TF)和逆文档频率(IDF)的乘积组成，能过滤常见词并保留重要词。",
+      "Formula": "$\\text{TFIDF}_{ij} = \\frac{\\text{tf}_{ij}}{\\text{tf}_{\\cdot j}} \\log \\frac{\\text{df}}{\\text{df}_i}$",
+      "Teaching_Note": "广泛用于信息检索和文本挖掘，是单词-文本矩阵常用的权重。",
+      "Source": "CH17-单词向量空间"
+    },
+    {
+      "Name": "话题",
+      "Type": "Concept",
+      "Definition": "隐藏在文本集合中的潜在语义结构或主题，由一组语义相关的单词表示，是潜在语义分析发现的核心内容。",
+      "Formula": "无",
+      "Teaching_Note": "一个文本通常包含多个话题，话题数量k远小于单词数量m。",
+      "Source": "CH17-话题向量空间"
+    },
+    {
+      "Name": "散度损失",
+      "Type": "Math",
+      "Definition": "非负矩阵分解中的一种损失函数，基于KL散度度量两个非负矩阵的差异，当矩阵为概率分布时退化为相对熵。",
+      "Formula": "$D(A\\|B) = \\sum_{i,j}\\left(a_{ij}\\log\\frac{a_{ij}}{b_{ij}} - a_{ij} + b_{ij}\\right)$",
+      "Teaching_Note": "下界为0，非对称，常用于NMF的优化。",
+      "Source": "CH17-非负矩阵分解算法"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "潜在语义分析",
+      "Relation": "APPLIED_TO",
+      "Tail": "话题分析",
+      "Context": "潜在语义分析主要用于文本的话题分析。"
+    },
+    {
+      "Head": "潜在语义分析",
+      "Relation": "APPLIED_TO",
+      "Tail": "截断奇异值分解",
+      "Context": "基于SVD的潜在语义分析通过截断奇异值分解得到话题向量空间和文本表示。"
+    },
+    {
+      "Head": "潜在语义分析",
+      "Relation": "APPLIED_TO",
+      "Tail": "非负矩阵分解",
+      "Context": "基于NMF的潜在语义分析利用非负矩阵分解得到非负话题向量和文本表示。"
+    },
+    {
+      "Head": "潜在语义分析",
+      "Relation": "APPLIED_TO",
+      "Tail": "降维",
+      "Context": "潜在语义分析将文本从高维单词空间映射到低维话题空间，实现降维。"
+    },
+    {
+      "Head": "单词-文本矩阵",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "单词向量空间",
+      "Context": "单词-文本矩阵的列向量就是各文本在单词向量空间中的坐标表示。"
+    },
+    {
+      "Head": "单词-话题矩阵",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "话题向量空间",
+      "Context": "单词-话题矩阵的列向量构成了话题向量空间的基。"
+    },
+    {
+      "Head": "话题-文本矩阵",
+      "Relation": "PREREQUISITE",
+      "Tail": "话题向量空间",
+      "Context": "话题-文本矩阵的列向量是文本在话题向量空间中的表示。"
+    },
+    {
+      "Head": "潜在语义分析",
+      "Relation": "PREREQUISITE",
+      "Tail": "单词-文本矩阵",
+      "Context": "潜在语义分析的输入是单词-文本矩阵。"
+    },
+    {
+      "Head": "潜在语义分析",
+      "Relation": "COMPRISE",
+      "Tail": "单词-话题矩阵",
+      "Context": "潜在语义分析将单词-文本矩阵分解得到单词-话题矩阵。"
+    },
+    {
+      "Head": "潜在语义分析",
+      "Relation": "COMPRISE",
+      "Tail": "话题-文本矩阵",
+      "Context": "潜在语义分析同时输出话题-文本矩阵作为文本的新表示。"
+    },
+    {
+      "Head": "TF-IDF",
+      "Relation": "APPLIED_TO",
+      "Tail": "单词-文本矩阵",
+      "Context": "单词-文本矩阵的元素常用TF-IDF作为权值以反映单词重要性。"
+    },
+    {
+      "Head": "非负矩阵分解",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "平方损失函数",
+      "Context": "非负矩阵分解的优化目标可选用平方损失函数，此时极小化$\\|X-WH\\|^2$。"
+    },
+    {
+      "Head": "非负矩阵分解",
+      "Relation": "OPTIMIZED_BY",
+      "Tail": "散度损失",
+      "Context": "非负矩阵分解的优化目标也可选用散度损失函数。"
+    },
+    {
+      "Head": "潜在语义分析",
+      "Relation": "COMPRISE",
+      "Tail": "话题",
+      "Context": "潜在语义分析通过矩阵分解发现数据中潜在的话题。"
+    }
+  ]
+}

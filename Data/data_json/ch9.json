@@ -1,0 +1,144 @@
+{
+  "nodes": [
+    {
+      "Name": "EM算法",
+      "Type": "Algorithm",
+      "Definition": "一种迭代算法，用于含有隐变量的概率模型参数的极大似然估计或极大后验概率估计。通过迭代地构造期望(Q函数)并极大化，逐步逼近最优参数。",
+      "Formula": "E步：$Q(\\theta,\\theta^{(i)})=E_Z[\\log P(Y,Z|\\theta)|Y,\\theta^{(i)}]$；M步：$\\theta^{(i+1)}=\\arg\\max_\\theta Q(\\theta,\\theta^{(i)})$",
+      "Teaching_Note": "EM算法是一般方法，不是具体模型。可用于生成模型的非监督学习。",
+      "Source": "CH09-EM算法的引入"
+    },
+    {
+      "Name": "高斯混合模型",
+      "Type": "Model",
+      "Definition": "一种概率模型，由K个高斯分布分模型加权求和构成，可用于聚类和密度估计。",
+      "Formula": "$P(y|\\theta)=\\sum_{k=1}^K\\alpha_k\\phi(y|\\theta_k)$，其中$\\phi(y|\\theta_k)=\\frac{1}{\\sqrt{2\\pi}\\sigma_k}\\exp\\left(-\\frac{(y-\\mu_k)^2}{2\\sigma_k^2}\\right)$",
+      "Teaching_Note": "GMM的参数估计是EM算法的重要应用。每个分模型对应一个簇。",
+      "Source": "CH09-高斯混合模型"
+    },
+    {
+      "Name": "Q函数",
+      "Type": "Math",
+      "Definition": "完全数据的对数似然函数关于给定观测数据和当前参数下未观测数据条件概率分布的期望，是EM算法迭代的核心中间函数。",
+      "Formula": "$Q(\\theta,\\theta^{(i)})=E_Z[\\log P(Y,Z|\\theta)|Y,\\theta^{(i)}]=\\sum_Z P(Z|Y,\\theta^{(i)})\\log P(Y,Z|\\theta)$",
+      "Teaching_Note": "Q函数将隐变量用期望代替，使不完全数据的似然最大化问题转化为完全数据的期望最大化问题。",
+      "Source": "CH09-EM算法的导出"
+    },
+    {
+      "Name": "隐变量",
+      "Type": "Concept",
+      "Definition": "在概率模型中，未被直接观测到但对观测变量有影响的潜在变量，EM算法通过引入隐变量简化参数估计问题。",
+      "Formula": "无",
+      "Teaching_Note": "在三硬币模型中，隐变量表示硬币A的抛掷结果；在GMM中，表示样本来自哪个分模型。",
+      "Source": "CH09-EM算法的引入"
+    },
+    {
+      "Name": "完全数据",
+      "Type": "Concept",
+      "Definition": "在含有隐变量的概率模型中，观测变量与隐变量的联合数据称为完全数据。",
+      "Formula": "无",
+      "Teaching_Note": "完全数据$(Y,Z)$是可观测但未完全获取的数据。",
+      "Source": "CH09-符号说明"
+    },
+    {
+      "Name": "不完全数据",
+      "Type": "Concept",
+      "Definition": "在含有隐变量的概率模型中，仅观测到的数据部分称为不完全数据。",
+      "Formula": "无",
+      "Teaching_Note": "不完全数据$Y$是实际能得到的观测数据。",
+      "Source": "CH09-符号说明"
+    },
+    {
+      "Name": "伯努利混合模型",
+      "Type": "Model",
+      "Definition": "由多个伯努利分布混合而成的模型，是混合模型的离散特例，三硬币模型是其典型。",
+      "Formula": "$P(y|\\theta)=\\pi p^y(1-p)^{1-y}+(1-\\pi)q^y(1-q)^{1-y}$",
+      "Teaching_Note": "三硬币模型是BMM的一个例子，有两个分模型。",
+      "Source": "CH09-伯努利混合模型"
+    },
+    {
+      "Name": "响应度",
+      "Type": "Math",
+      "Definition": "在EM算法的E步中，当前参数下隐变量取某值的后验概率，表示观测数据对分模型的归属程度。",
+      "Formula": "GMM中：$\\hat\\gamma_{jk}=\\frac{\\alpha_k\\phi(y_j|\\theta_k)}{\\sum_{k=1}^K\\alpha_k\\phi(y_j|\\theta_k)}$",
+      "Teaching_Note": "响应度矩阵维度为$N\\times K$，每一行和为1，表示软分配。",
+      "Source": "CH09-高斯混合模型参数估计的EM算法"
+    },
+    {
+      "Name": "广义期望极大",
+      "Type": "Algorithm",
+      "Definition": "EM算法的推广形式，在M步中不直接求全局极大值，而是通过分区条件极大化等方式增大Q函数，以简化求解。",
+      "Formula": "无",
+      "Teaching_Note": "当参数维数较高时，GEM可将M步分解为多个条件极大化步骤。",
+      "Source": "CH09-EM算法的推广"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "EM算法",
+      "Relation": "APPLIED_TO",
+      "Tail": "极大似然估计",
+      "Context": "EM算法用于含有隐变量时概率模型的极大似然估计。"
+    },
+    {
+      "Head": "EM算法",
+      "Relation": "APPLIED_TO",
+      "Tail": "高斯混合模型",
+      "Context": "EM算法是估计高斯混合模型参数的标准方法。"
+    },
+    {
+      "Head": "EM算法",
+      "Relation": "APPLIED_TO",
+      "Tail": "伯努利混合模型",
+      "Context": "EM算法可用于估计伯努利混合模型参数。"
+    },
+    {
+      "Head": "EM算法",
+      "Relation": "PREREQUISITE",
+      "Tail": "Q函数",
+      "Context": "EM算法通过E步计算Q函数，M步最大化Q函数。"
+    },
+    {
+      "Head": "EM算法",
+      "Relation": "PREREQUISITE",
+      "Tail": "隐变量",
+      "Context": "EM算法专门解决含有隐变量的概率模型参数估计问题。"
+    },
+    {
+      "Head": "EM算法",
+      "Relation": "PREREQUISITE",
+      "Tail": "完全数据",
+      "Context": "EM算法利用完全数据的对数似然函数构造Q函数。"
+    },
+    {
+      "Head": "不完全数据",
+      "Relation": "COMPARE",
+      "Tail": "完全数据",
+      "Context": "不完全数据仅包含观测变量，完全数据还包含隐变量。"
+    },
+    {
+      "Head": "高斯混合模型",
+      "Relation": "PREREQUISITE",
+      "Tail": "响应度",
+      "Context": "高斯混合模型EM算法的E步核心是计算响应度。"
+    },
+    {
+      "Head": "高斯混合模型",
+      "Relation": "COMPARE",
+      "Tail": "伯努利混合模型",
+      "Context": "两者都是混合模型，GMM使用高斯分模型，BMM使用伯努利分模型。"
+    },
+    {
+      "Head": "广义期望极大",
+      "Relation": "PREREQUISITE",
+      "Tail": "EM算法",
+      "Context": "GEM是EM算法的推广，放宽了M步必须求极大值的要求。"
+    },
+    {
+      "Head": "EM算法",
+      "Relation": "APPLIED_TO",
+      "Tail": "生成模型",
+      "Context": "EM算法可用于生成模型的非监督学习。"
+    }
+  ]
+}

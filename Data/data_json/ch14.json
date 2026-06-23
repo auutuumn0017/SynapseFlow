@@ -1,0 +1,172 @@
+{
+  "nodes": [
+    {
+      "Name": "类（簇）",
+      "Type": "Concept",
+      "Definition": "聚类的结果，是由一组相似样本组成的子集。类具有均值、直径、样本散布矩阵和样本协方差矩阵等特征。",
+      "Formula": "无",
+      "Teaching_Note": "类是一个样本集合，聚类的目标是将样本划分到不同的类中。",
+      "Source": "CH14-类或簇"
+    },
+    {
+      "Name": "马哈拉诺比斯距离",
+      "Type": "Math",
+      "Definition": "一种考虑特征间相关性的距离度量，通过协方差矩阵的逆进行缩放，对尺度变换具有不变性。",
+      "Formula": "$d_{ij}=\\left[(x_i-x_j)^\\mathrm T S^{-1}(x_i-x_j)\\right]^{\\frac{1}{2}}$",
+      "Teaching_Note": "马氏距离在多元统计分析中常用，考虑了数据分布。",
+      "Source": "CH14-距离或相似度"
+    },
+    {
+      "Name": "相关系数",
+      "Type": "Math",
+      "Definition": "度量两个变量之间线性相关程度的统计量，取值范围[-1,1]，绝对值越大表示线性相关性越强。",
+      "Formula": "$r_{ij}=\\frac{\\sum_{k=1}^m (x_{ki}-\\bar x_i)(x_{kj}-\\bar x_j)}{\\sqrt{\\sum_{k=1}^m (x_{ki}-\\bar x_i)^2}\\sqrt{\\sum_{k=1}^m (x_{kj}-\\bar x_j)^2}}$",
+      "Teaching_Note": "相关系数接近1时样本正相关，可用于相似度衡量。",
+      "Source": "CH14-距离或相似度"
+    },
+    {
+      "Name": "夹角余弦",
+      "Type": "Math",
+      "Definition": "衡量两个向量方向差异的相似度度量，等于向量内积与模的乘积之比，余弦值越大表示夹角越小，相似度越高。",
+      "Formula": "$s_{ij}=\\frac{\\sum_{k=1}^m x_{ki}x_{kj}}{\\sqrt{\\sum_{k=1}^m x_{ki}^2}\\sqrt{\\sum_{k=1}^m x_{kj}^2}}$",
+      "Teaching_Note": "夹角余弦在文本相似度计算中广泛应用。",
+      "Source": "CH14-距离或相似度"
+    },
+    {
+      "Name": "最短距离",
+      "Type": "Concept",
+      "Definition": "类间距离的一种定义，用两类中最近样本之间的距离作为类间距离，即Single Linkage。",
+      "Formula": "$D_{pq}=\\min\\{d_{ij}|x_i\\in G_p, x_j\\in G_q\\}$",
+      "Teaching_Note": "最短距离对噪声和离群点敏感，容易产生链式效应。",
+      "Source": "CH14-类与类之间的距离"
+    },
+    {
+      "Name": "最长距离",
+      "Type": "Concept",
+      "Definition": "类间距离的一种定义，用两类中最远样本之间的距离作为类间距离，即Complete Linkage。",
+      "Formula": "$D_{pq}=\\max\\{d_{ij}|x_i\\in G_p, x_j\\in G_q\\}$",
+      "Teaching_Note": "最长距离倾向于产生紧凑的类。",
+      "Source": "CH14-类与类之间的距离"
+    },
+    {
+      "Name": "中心距离",
+      "Type": "Concept",
+      "Definition": "类间距离的一种定义，用两类中心点（均值向量）之间的距离作为类间距离。",
+      "Formula": "$D_{pq}=d_{\\bar x_p\\bar x_q}$",
+      "Teaching_Note": "中心距离计算高效，但未考虑类的分布形状。",
+      "Source": "CH14-类与类之间的距离"
+    },
+    {
+      "Name": "平均距离",
+      "Type": "Concept",
+      "Definition": "类间距离的一种定义，用两类中所有样本对之间距离的平均值作为类间距离，即Average Linkage。",
+      "Formula": "$D_{pq}=\\frac{1}{n_p n_q}\\sum_{x_i\\in G_p}\\sum_{x_j\\in G_q} d_{ij}$",
+      "Teaching_Note": "平均距离对噪声相对稳健，是比较常用的类间距离。",
+      "Source": "CH14-类与类之间的距离"
+    },
+    {
+      "Name": "层次聚类",
+      "Type": "Algorithm",
+      "Definition": "假设类别之间存在层次结构，通过聚合（自下而上）或分裂（自上而下）的方式逐步合并或划分类别，形成树形聚类结构的聚类方法。",
+      "Formula": "无",
+      "Teaching_Note": "聚合聚类需定义距离度量、合并规则和停止条件。复杂度较高$O(n^3m)$。",
+      "Source": "CH14-层次聚类"
+    },
+    {
+      "Name": "聚合聚类",
+      "Type": "Algorithm",
+      "Definition": "自下而上的层次聚类方法，初始时每个样本自成一类，然后每次合并类间距离最近的两个类，直至满足停止条件。",
+      "Formula": "无",
+      "Teaching_Note": "聚合聚类的三要素：距离或相似度、合并规则（类间距离定义）、停止条件。",
+      "Source": "CH14-层次聚类"
+    },
+    {
+      "Name": "K均值聚类",
+      "Type": "Algorithm",
+      "Definition": "一种基于原型的硬聚类算法，将样本划分到K个类中，使得每个样本与其所属类中心的距离平方和最小。",
+      "Formula": "$J=\\sum_{k=1}^K\\sum_{x_i\\in C_k}\\|x_i-\\mu_k\\|^2$",
+      "Teaching_Note": "1967年由MacQueen提出。对初值敏感，采用欧氏距离平方。",
+      "Source": "CH14-k均值聚类"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "聚类",
+      "Relation": "PREREQUISITE",
+      "Tail": "类（簇）",
+      "Context": "聚类的结果是将样本划分成若干类或簇。"
+    },
+    {
+      "Head": "距离度量",
+      "Relation": "COMPRISE",
+      "Tail": "马哈拉诺比斯距离",
+      "Context": "马哈拉诺比斯距离是常用距离度量之一。"
+    },
+    {
+      "Head": "距离度量",
+      "Relation": "COMPRISE",
+      "Tail": "相关系数",
+      "Context": "相关系数可用于衡量样本相似度。"
+    },
+    {
+      "Head": "距离度量",
+      "Relation": "COMPRISE",
+      "Tail": "夹角余弦",
+      "Context": "夹角余弦可用于衡量样本相似度。"
+    },
+    {
+      "Head": "聚类",
+      "Relation": "COMPRISE",
+      "Tail": "层次聚类",
+      "Context": "层次聚类是一种重要的聚类方法。"
+    },
+    {
+      "Head": "聚类",
+      "Relation": "COMPRISE",
+      "Tail": "K均值聚类",
+      "Context": "K均值聚类是一种广泛使用的聚类方法。"
+    },
+    {
+      "Head": "层次聚类",
+      "Relation": "COMPRISE",
+      "Tail": "聚合聚类",
+      "Context": "聚合聚类是层次聚类中自下而上的一种实现方式。"
+    },
+    {
+      "Head": "聚合聚类",
+      "Relation": "APPLIED_TO",
+      "Tail": "最短距离",
+      "Context": "以最短距离作为类间距离合并规则。"
+    },
+    {
+      "Head": "聚合聚类",
+      "Relation": "APPLIED_TO",
+      "Tail": "最长距离",
+      "Context": "以最长距离作为类间距离合并规则。"
+    },
+    {
+      "Head": "聚合聚类",
+      "Relation": "APPLIED_TO",
+      "Tail": "中心距离",
+      "Context": "以中心距离作为类间距离合并规则。"
+    },
+    {
+      "Head": "聚合聚类",
+      "Relation": "APPLIED_TO",
+      "Tail": "平均距离",
+      "Context": "以平均距离作为类间距离合并规则。"
+    },
+    {
+      "Head": "K均值聚类",
+      "Relation": "PREREQUISITE",
+      "Tail": "硬聚类",
+      "Context": "K均值聚类是一种典型的硬聚类算法。"
+    },
+    {
+      "Head": "K均值聚类",
+      "Relation": "APPLIED_TO",
+      "Tail": "欧氏距离",
+      "Context": "K均值聚类采用欧氏距离的平方作为样本到类中心的距离度量。"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+# ===== Backend RAG & LLM & Graph =====
+fastapi
+uvicorn
+pydantic
+neo4j
+pandas
+torch
+torchvision
+transformers
+bitsandbytes
+sentence-transformers
+dashscope
+openai
+
+# ===== Digital Avatar & WebRTC (LiveTalking) =====
+aiohttp
+aiohttp_cors
+aiortc
+av
+opencv-python
+numpy
+scipy
+librosa
+soundfile
+edge-tts
+funasr
+onnxruntime
+pyvirtualcam
+websockets
+requests
+omegaconf
+tqdm
+flask
+gradio-client

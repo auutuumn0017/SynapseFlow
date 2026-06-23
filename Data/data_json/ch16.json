@@ -1,0 +1,110 @@
+{
+  "nodes": [
+    {
+      "Name": "主成分分析",
+      "Type": "Algorithm",
+      "Definition": "一种常用的无监督降维方法，通过正交变换将可能存在相关性的原始变量转换为线性不相关的新变量（即主成分），使少数几个主成分保留数据中大部分变异信息。",
+      "Formula": "$y_k = \\alpha_k^\\mathrm{T} \\boldsymbol{x}$",
+      "Teaching_Note": "PCA不是特征选择，新变量是原始特征的线性组合且线性无关。结果可作为其他机器学习方法的输入。",
+      "Source": "CH16-总体主成分分析"
+    },
+    {
+      "Name": "总体主成分分析",
+      "Type": "Concept",
+      "Definition": "在已知总体协方差矩阵的情况下，导出主成分的方法。主成分是原始变量的线性组合，各主成分互不相关，且方差依次递减，协方差矩阵为对角矩阵$\\Lambda$。",
+      "Formula": "$\\mathrm{cov}(\\boldsymbol{y}) = \\Lambda = \\mathrm{diag}(\\lambda_1, \\lambda_2, \\cdots, \\lambda_m)$",
+      "Teaching_Note": "总体主成分的方差之和等于原始变量方差之和。",
+      "Source": "CH16-总体主成分分析"
+    },
+    {
+      "Name": "样本主成分分析",
+      "Type": "Concept",
+      "Definition": "在给定样本数据矩阵的情况下，通过估计样本协方差矩阵或相关矩阵，进而求取样本主成分的方法。算法上可通过相关矩阵特征值分解或数据矩阵奇异值分解实现。",
+      "Formula": "无",
+      "Teaching_Note": "样本主成分分析的两种实现算法：相关矩阵特征值分解、数据矩阵截断SVD分解。",
+      "Source": "CH16-样本主成分分析"
+    },
+    {
+      "Name": "规范化变量",
+      "Type": "Strategy",
+      "Definition": "为使不同量纲或数量级的变量在分析中具有同等重要性，将各变量进行标准化处理，使其样本均值为0，方差为1。",
+      "Formula": "$x_{ij}^* = \\frac{x_{ij} - \\bar{x}_i}{\\sqrt{s_{ii}}}$",
+      "Teaching_Note": "在主成分分析中，为避免量纲影响，通常需要对原始变量进行规范化处理，这是数据预处理的关键步骤。",
+      "Source": "CH16-规范化变量的总体主成分"
+    },
+    {
+      "Name": "方差贡献率",
+      "Type": "Math",
+      "Definition": "某个主成分的方差占总方差的比例，用于衡量该主成分综合原始变量信息的能力。",
+      "Formula": "$\\eta_i = \\frac{\\lambda_i}{\\sum_{k=1}^m \\lambda_k}$",
+      "Teaching_Note": "通常选择累计方差贡献率达到预定阈值（如85%）的前k个主成分。",
+      "Source": "CH16-主成分的个数"
+    },
+    {
+      "Name": "因子负荷量",
+      "Type": "Math",
+      "Definition": "主成分与原始变量之间的相关系数，反映了主成分对原始变量的解释程度。",
+      "Formula": "$\\rho(y_k, x_i) = \\sqrt{\\lambda_k} e_{ik}$",
+      "Teaching_Note": "因子负荷量的平方和等于该主成分的方差贡献，可用于解释主成分的实际含义。",
+      "Source": "CH16-主要性质"
+    },
+    {
+      "Name": "相关矩阵",
+      "Type": "Math",
+      "Definition": "由各变量间相关系数构成的矩阵，对角线元素为1，非对角线元素表示变量间的线性相关程度。当数据已规范化时，相关矩阵即协方差矩阵。",
+      "Formula": "$R = [r_{ij}]_{m \\times m} = \\frac{1}{n-1} X X^\\mathrm{T}$",
+      "Teaching_Note": "样本主成分分析中，常先计算规范化数据的相关矩阵，再对其进行特征分解。",
+      "Source": "CH16-相关矩阵的特征值分解算法"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "主成分分析",
+      "Relation": "COMPRISE",
+      "Tail": "总体主成分分析",
+      "Context": "主成分分析分为总体主成分分析和样本主成分分析。"
+    },
+    {
+      "Head": "主成分分析",
+      "Relation": "COMPRISE",
+      "Tail": "样本主成分分析",
+      "Context": "主成分分析分为总体主成分分析和样本主成分分析。"
+    },
+    {
+      "Head": "主成分分析",
+      "Relation": "PREREQUISITE",
+      "Tail": "规范化变量",
+      "Context": "为避免变量量纲影响，进行主成分分析前通常需要对原始变量进行规范化处理。"
+    },
+    {
+      "Head": "主成分分析",
+      "Relation": "APPLIED_TO",
+      "Tail": "降维",
+      "Context": "主成分分析是一种经典的无监督降维方法。"
+    },
+    {
+      "Head": "总体主成分分析",
+      "Relation": "COMPRISE",
+      "Tail": "方差贡献率",
+      "Context": "方差贡献率用于度量总体主成分的重要性，并据此选择主成分个数。"
+    },
+    {
+      "Head": "总体主成分分析",
+      "Relation": "COMPRISE",
+      "Tail": "因子负荷量",
+      "Context": "因子负荷量用于解释总体主成分与原始变量的关系。"
+    },
+    {
+      "Head": "样本主成分分析",
+      "Relation": "APPLIED_TO",
+      "Tail": "相关矩阵",
+      "Context": "样本主成分分析的一种算法是对样本相关矩阵进行特征值分解。"
+    },
+    {
+      "Head": "样本主成分分析",
+      "Relation": "APPLIED_TO",
+      "Tail": "截断奇异值分解",
+      "Context": "样本主成分分析的另一种算法是对中心化后的数据矩阵进行截断奇异值分解，得到主成分。"
+    }
+  ]
+}

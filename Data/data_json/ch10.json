@@ -1,0 +1,302 @@
+{
+  "nodes": [
+    {
+      "Name": "隐马尔可夫模型",
+      "Type": "Model",
+      "Definition": "一种关于时序的概率模型，描述由一个隐藏的马尔可夫链随机生成不可观测的状态序列，再由各个状态生成一个观测从而产生观测序列的过程。",
+      "Formula": "$\\lambda = (A, B, \\pi)$",
+      "Teaching_Note": "HMM可用于序列标注问题，是动态贝叶斯网络的最简单形式。模型由初始概率分布π、状态转移概率矩阵A和观测概率矩阵B唯一确定。",
+      "Source": "CH10-隐马尔可夫模型的基本概念"
+    },
+    {
+      "Name": "齐次马尔可夫性假设",
+      "Type": "Concept",
+      "Definition": "隐马尔可夫模型的基本假设之一：假设隐藏的马尔可夫链在任意时刻t的状态只依赖于其前一时刻的状态，与其他时刻的状态及观测无关，也与时刻t无关。",
+      "Formula": "$P(i_t|i_{t-1},o_{t-1},\\dots,i_1,o_1) = P(i_t|i_{t-1})$",
+      "Teaching_Note": "这一假设简化了状态序列的依赖关系。",
+      "Source": "CH10-两个基本假设"
+    },
+    {
+      "Name": "观测独立性假设",
+      "Type": "Concept",
+      "Definition": "隐马尔可夫模型的基本假设之一：假设任意时刻的观测只依赖于该时刻的马尔可夫链的状态，与其他观测及状态无关。",
+      "Formula": "$P(o_t|i_T,o_T,\\dots,i_1,o_1)=P(o_t|i_t)$",
+      "Teaching_Note": "保证了观测仅由当前状态决定，简化了模型结构。",
+      "Source": "CH10-两个基本假设"
+    },
+    {
+      "Name": "概率计算问题",
+      "Type": "Task",
+      "Definition": "HMM三个基本问题之一：给定模型λ和观测序列O，计算在模型λ下观测序列O出现的概率P(O|λ)。",
+      "Formula": "$P(O|\\lambda)$",
+      "Teaching_Note": "可通过直接计算、前向算法或后向算法求解。",
+      "Source": "CH10-三个基本问题"
+    },
+    {
+      "Name": "学习问题",
+      "Type": "Task",
+      "Definition": "HMM三个基本问题之一：已知观测序列O，估计模型λ=(A,B,π)的参数，使得在该模型下观测序列概率P(O|λ)最大。",
+      "Formula": "无",
+      "Teaching_Note": "若训练数据包含状态序列，用监督学习；若只有观测序列，用Baum-Welch算法（EM算法）。",
+      "Source": "CH10-三个基本问题"
+    },
+    {
+      "Name": "预测问题",
+      "Type": "Task",
+      "Definition": "HMM三个基本问题之一（解码问题）：给定模型λ和观测序列O，求最可能的状态序列I。",
+      "Formula": "$I^* = \\arg\\max_I P(I|O,\\lambda)$",
+      "Teaching_Note": "可用近似算法或维特比算法求解，维特比算法用动态规划求最优路径。",
+      "Source": "CH10-三个基本问题"
+    },
+    {
+      "Name": "前向概率",
+      "Type": "Math",
+      "Definition": "给定模型λ，定义到时刻t部分观测序列为o_1,...,o_t且时刻t状态为q_i的概率为前向概率。",
+      "Formula": "$\\alpha_t(i)=P(o_1,o_2,\\dots,o_t,i_t=q_i|\\lambda)$",
+      "Teaching_Note": "前向算法利用动态规划递推计算α，复杂度O(N²T)。",
+      "Source": "CH10-前向算法"
+    },
+    {
+      "Name": "后向概率",
+      "Type": "Math",
+      "Definition": "给定模型λ和时刻t状态为q_i，定义从t+1到T的部分观测序列为o_{t+1},...,o_T的概率为后向概率。",
+      "Formula": "$\\beta_t(i)=P(o_{t+1},o_{t+2},\\dots,o_T|i_t=q_i,\\lambda)$",
+      "Teaching_Note": "后向算法从后向前递推计算β。",
+      "Source": "CH10-后向算法"
+    },
+    {
+      "Name": "前向算法",
+      "Type": "Algorithm",
+      "Definition": "通过递推计算前向概率α_t(i)来求解观测序列概率P(O|λ)的算法。",
+      "Formula": "$\\alpha_{t+1}(i)=\\left[\\sum_{j=1}^N\\alpha_t(j)a_{ji}\\right]b_i(o_{t+1})$；$P(O|\\lambda)=\\sum_{i=1}^N\\alpha_T(i)$",
+      "Teaching_Note": "利用路径结构递推，避免重复计算。",
+      "Source": "CH10-前向算法"
+    },
+    {
+      "Name": "后向算法",
+      "Type": "Algorithm",
+      "Definition": "通过递推计算后向概率β_t(i)来求解观测序列概率P(O|λ)的算法。",
+      "Formula": "$\\beta_t(i)=\\sum_{j=1}^N a_{ij}b_j(o_{t+1})\\beta_{t+1}(j)$；$P(O|\\lambda)=\\sum_{i=1}^N\\pi_i b_i(o_1)\\beta_1(i)$",
+      "Teaching_Note": "从最终时刻向前递推。",
+      "Source": "CH10-后向算法"
+    },
+    {
+      "Name": "Baum-Welch算法",
+      "Type": "Algorithm",
+      "Definition": "EM算法在隐马尔可夫模型学习中的具体实现，用于无监督地估计HMM参数。E步计算前向后向概率和期望，M步更新模型参数。",
+      "Formula": "$a_{ij}^{(n+1)}=\\frac{\\sum_{t=1}^{T-1}\\xi_t(i,j)}{\\sum_{t=1}^{T-1}\\gamma_t(i)}$；$b_j(k)^{(n+1)}=\\frac{\\sum_{t=1,o_t=v_k}^{T}\\gamma_t(j)}{\\sum_{t=1}^T\\gamma_t(j)}$；$\\pi_i^{(n+1)}=\\gamma_1(i)$",
+      "Teaching_Note": "其中γ_t(i)为t时刻处于状态i的概率，ξ_t(i,j)为t时刻状态i且t+1时刻状态j的概率。",
+      "Source": "CH10-Baum-Welch算法"
+    },
+    {
+      "Name": "维特比算法",
+      "Type": "Algorithm",
+      "Definition": "一种动态规划算法，用于求解隐马尔可夫模型预测问题，寻找给定观测序列下概率最大的状态序列（最优路径）。",
+      "Formula": "递推：$\\delta_t(i)=\\max_{1\\le j\\le N}[\\delta_{t-1}(j)a_{ji}]b_i(o_t)$；回溯：$\\psi_t(i)=\\arg\\max_{1\\le j\\le N}[\\delta_{t-1}(j)a_{ji}]$",
+      "Teaching_Note": "维特比算法通过记录并回溯最优路径避免枚举所有可能状态序列。",
+      "Source": "CH10-维特比算法"
+    },
+    {
+      "Name": "状态转移概率矩阵",
+      "Type": "Math",
+      "Definition": "描述隐马尔可夫模型中隐藏状态之间转移概率的矩阵，元素a_ij表示由状态q_i转移到状态q_j的概率。",
+      "Formula": "$A=[a_{ij}]_{N\\times N}$，其中$a_{ij}=P(i_{t+1}=q_j|i_t=q_i)$",
+      "Teaching_Note": "状态转移矩阵是HMM模型三要素之一。",
+      "Source": "CH10-隐马尔可夫模型的定义"
+    },
+    {
+      "Name": "观测概率矩阵",
+      "Type": "Math",
+      "Definition": "描述隐马尔可夫模型中各隐藏状态下生成各观测值的概率矩阵，元素b_j(k)表示在状态q_j下生成观测v_k的概率。",
+      "Formula": "$B=[b_j(k)]_{N\\times M}$，其中$b_j(k)=P(o_t=v_k|i_t=q_j)$",
+      "Teaching_Note": "观测概率矩阵是HMM模型三要素之一，可以是离散或连续分布。",
+      "Source": "CH10-隐马尔可夫模型的定义"
+    },
+    {
+      "Name": "初始状态概率向量",
+      "Type": "Math",
+      "Definition": "描述隐马尔可夫模型初始时刻各隐藏状态出现概率的向量。",
+      "Formula": "$\\pi=(\\pi_i)$，其中$\\pi_i=P(i_1=q_i)$",
+      "Teaching_Note": "初始状态概率向量是HMM模型三要素之一。",
+      "Source": "CH10-隐马尔可夫模型的定义"
+    },
+    {
+      "Name": "马尔可夫链",
+      "Type": "Concept",
+      "Definition": "时间和状态取值都离散的马尔可夫过程，满足马尔可夫假设：随机过程中各个状态的概率分布只与它的前一个状态有关。",
+      "Formula": "$P(s_t|s_1,s_2,\\dots,s_{t-1})=P(s_t|s_{t-1})$",
+      "Teaching_Note": "HMM中隐藏的状态序列构成马尔可夫链。",
+      "Source": "CH10-马尔可夫链"
+    },
+    {
+      "Name": "状态序列",
+      "Type": "Concept",
+      "Definition": "隐马尔可夫模型中由隐藏的马尔可夫链随机生成的不可观测的状态序列。",
+      "Formula": "$I=(i_1,i_2,\\dots,i_T)$",
+      "Teaching_Note": "状态序列是隐变量，不可观测，需要通过观测序列推断。",
+      "Source": "CH10-隐马尔可夫模型的基本概念"
+    },
+    {
+      "Name": "观测序列",
+      "Type": "Concept",
+      "Definition": "隐马尔可夫模型中可观测到的数据序列，由对应的状态序列通过观测概率分布生成。",
+      "Formula": "$O=(o_1,o_2,\\dots,o_T)$",
+      "Teaching_Note": "观测序列是已知数据，是HMM算法的输入。",
+      "Source": "CH10-隐马尔可夫模型的基本概念"
+    },
+    {
+      "Name": "观测序列生成算法",
+      "Type": "Algorithm",
+      "Definition": "根据给定的HMM模型参数λ=(A,B,π)生成观测序列的算法，用于理解和模拟模型。",
+      "Formula": "无",
+      "Teaching_Note": "按初始分布产生i_1，然后交替根据状态生成观测、按转移矩阵转移状态。",
+      "Source": "CH10-观测序列的生成过程"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "PREREQUISITE",
+      "Tail": "齐次马尔可夫性假设",
+      "Context": "HMM基于齐次马尔可夫假设。"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "PREREQUISITE",
+      "Tail": "观测独立性假设",
+      "Context": "HMM基于观测独立性假设。"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "COMPRISE",
+      "Tail": "概率计算问题",
+      "Context": "HMM三个基本问题之一"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "COMPRISE",
+      "Tail": "学习问题",
+      "Context": "HMM三个基本问题之一"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "COMPRISE",
+      "Tail": "预测问题",
+      "Context": "HMM三个基本问题之一"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "COMPRISE",
+      "Tail": "状态转移概率矩阵",
+      "Context": "HMM模型三要素之一"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "COMPRISE",
+      "Tail": "观测概率矩阵",
+      "Context": "HMM模型三要素之一"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "COMPRISE",
+      "Tail": "初始状态概率向量",
+      "Context": "HMM模型三要素之一"
+    },
+    {
+      "Head": "概率计算问题",
+      "Relation": "APPLIED_TO",
+      "Tail": "前向算法",
+      "Context": "前向算法解决概率计算问题"
+    },
+    {
+      "Head": "概率计算问题",
+      "Relation": "APPLIED_TO",
+      "Tail": "后向算法",
+      "Context": "后向算法解决概率计算问题"
+    },
+    {
+      "Head": "前向算法",
+      "Relation": "PREREQUISITE",
+      "Tail": "前向概率",
+      "Context": "前向算法基于前向概率的定义递推。"
+    },
+    {
+      "Head": "后向算法",
+      "Relation": "PREREQUISITE",
+      "Tail": "后向概率",
+      "Context": "后向算法基于后向概率的定义递推。"
+    },
+    {
+      "Head": "学习问题",
+      "Relation": "APPLIED_TO",
+      "Tail": "Baum-Welch算法",
+      "Context": "Baum-Welch算法解决无监督学习问题，是EM算法在HMM中的实现。"
+    },
+    {
+      "Head": "Baum-Welch算法",
+      "Relation": "EQUIVALENT_TO",
+      "Tail": "EM算法",
+      "Context": "Baum-Welch算法是EM算法在隐马尔可夫模型学习中的具体实现。"
+    },
+    {
+      "Head": "Baum-Welch算法",
+      "Relation": "PREREQUISITE",
+      "Tail": "前向算法",
+      "Context": "Baum-Welch算法的E步需要使用前向算法计算α。"
+    },
+    {
+      "Head": "Baum-Welch算法",
+      "Relation": "PREREQUISITE",
+      "Tail": "后向算法",
+      "Context": "Baum-Welch算法的E步需要使用后向算法计算β。"
+    },
+    {
+      "Head": "预测问题",
+      "Relation": "APPLIED_TO",
+      "Tail": "维特比算法",
+      "Context": "维特比算法解决解码问题，求最优状态序列。"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "PREREQUISITE",
+      "Tail": "马尔可夫链",
+      "Context": "HMM的隐藏状态序列构成马尔可夫链。"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "COMPRISE",
+      "Tail": "状态序列",
+      "Context": "状态序列是HMM的隐变量部分。"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "COMPRISE",
+      "Tail": "观测序列",
+      "Context": "观测序列是HMM的观测变量部分。"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "COMPRISE",
+      "Tail": "观测序列生成算法",
+      "Context": "用于理解和模拟HMM的数据生成过程。"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "COMPARE",
+      "Tail": "高斯混合模型",
+      "Context": "HMM可以看作混合模型的推广，混合模型中样本独立同分布，HMM中状态序列具有马尔可夫依赖性。"
+    },
+    {
+      "Head": "马尔可夫链",
+      "Relation": "COMPARE",
+      "Tail": "隐马尔可夫模型",
+      "Context": "马尔可夫链状态直接可见，HMM状态隐藏不可见。"
+    },
+    {
+      "Head": "隐马尔可夫模型",
+      "Relation": "APPLIED_TO",
+      "Tail": "标注问题",
+      "Context": "HMM可用于解决序列标注问题。"
+    }
+  ]
+}

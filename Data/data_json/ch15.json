@@ -1,0 +1,104 @@
+{
+  "nodes": [
+    {
+      "Name": "奇异值分解",
+      "Type": "Algorithm",
+      "Definition": "将m×n实矩阵A表示为三个实矩阵乘积的运算，即A=UΣV^T，其中U和V为正交矩阵，Σ为对角矩阵，对角线元素为奇异值。是基础学习方法，在统计学中有广泛应用。",
+      "Formula": "$A=U\\Sigma V^\\mathrm{T}$",
+      "Teaching_Note": "奇异值分解在平方损失意义下是对矩阵的最优近似，即数据压缩。几何上可解释为旋转、缩放、再旋转的组合。",
+      "Source": "CH15-奇异值分解的定义与性质"
+    },
+    {
+      "Name": "紧奇异值分解",
+      "Type": "Algorithm",
+      "Definition": "保留矩阵所有非零奇异值的奇异值分解，即只取前r个奇异值及其对应的左右奇异向量，其中r为矩阵的秩。",
+      "Formula": "$A=U_r\\Sigma_r V_r^\\mathrm{T}$",
+      "Teaching_Note": "紧奇异值分解与原矩阵完全等价，无信息损失。",
+      "Source": "CH15-紧奇异值分解与截断奇异值分解"
+    },
+    {
+      "Name": "截断奇异值分解",
+      "Type": "Algorithm",
+      "Definition": "只保留前k个最大奇异值的奇异值分解，用低秩矩阵近似原矩阵，是一种矩阵压缩和降噪方法。",
+      "Formula": "$A\\approx U_k\\Sigma_k V_k^\\mathrm{T}$",
+      "Teaching_Note": "截断SVD给出矩阵在弗罗贝尼乌斯范数下的最优低秩近似。",
+      "Source": "CH15-紧奇异值分解与截断奇异值分解"
+    },
+    {
+      "Name": "弗罗贝尼乌斯范数",
+      "Type": "Math",
+      "Definition": "一种矩阵范数，定义为矩阵所有元素平方和的平方根，是向量L2范数的直接推广。",
+      "Formula": "$\\|A\\|_F=\\left(\\sum_{i=1}^m\\sum_{j=1}^n a_{ij}^2\\right)^{\\frac{1}{2}}$",
+      "Teaching_Note": "对应机器学习中的平方损失函数，SVD给出的矩阵近似在此范数下最优。",
+      "Source": "CH15-弗罗贝尼乌斯范数"
+    },
+    {
+      "Name": "矩阵的最优近似",
+      "Type": "Math",
+      "Definition": "在弗罗贝尼乌斯范数下，截断奇异值分解给出的矩阵是所有同秩矩阵中与原矩阵误差最小的近似。",
+      "Formula": "$\\|A-X\\|_F=(\\sigma_{k+1}^2+\\sigma_{k+2}^2+\\cdots+\\sigma_n^2)^{\\frac{1}{2}}$",
+      "Teaching_Note": "截断SVD保留矩阵的主要能量，可滤除噪声。",
+      "Source": "CH15-矩阵的最优近似"
+    },
+    {
+      "Name": "线性变换",
+      "Type": "Concept",
+      "Definition": "一种映射，将向量空间中的向量映射到另一个向量空间（或自身），并保持向量加法和数乘运算，网格线保持平行等距且原点不变。",
+      "Formula": "无",
+      "Teaching_Note": "SVD的几何解释：矩阵A代表的线性变换可分解为V^T（旋转/反射）、Σ（缩放）、U（旋转/反射）三个简单变换。",
+      "Source": "CH15-几何解释"
+    },
+    {
+      "Name": "矩阵的外积展开式",
+      "Type": "Math",
+      "Definition": "奇异值分解的一种表达形式，将矩阵A表示为各奇异值与其左右奇异向量外积的加权和。",
+      "Formula": "$A=\\sum_{k=1}^n\\sigma_k u_k v_k^\\mathrm{T}$",
+      "Teaching_Note": "通过截断外积展开式可得到矩阵的低秩近似。",
+      "Source": "CH15-矩阵的外积展开式"
+    }
+  ],
+  "relationships": [
+    {
+      "Head": "奇异值分解",
+      "Relation": "COMPRISE",
+      "Tail": "紧奇异值分解",
+      "Context": "完全奇异值分解保留所有奇异值，紧奇异值分解仅保留非零奇异值。"
+    },
+    {
+      "Head": "奇异值分解",
+      "Relation": "COMPRISE",
+      "Tail": "截断奇异值分解",
+      "Context": "截断奇异值分解是取前k个最大奇异值的简化分解。"
+    },
+    {
+      "Head": "截断奇异值分解",
+      "Relation": "APPLIED_TO",
+      "Tail": "矩阵的最优近似",
+      "Context": "截断SVD在弗罗贝尼乌斯范数下给出矩阵的最优低秩近似。"
+    },
+    {
+      "Head": "奇异值分解",
+      "Relation": "APPLIED_TO",
+      "Tail": "矩阵的外积展开式",
+      "Context": "奇异值分解可写成外积展开式，用于矩阵近似。"
+    },
+    {
+      "Head": "弗罗贝尼乌斯范数",
+      "Relation": "APPLIED_TO",
+      "Tail": "矩阵的最优近似",
+      "Context": "矩阵近似误差在弗罗贝尼乌斯范数下衡量。"
+    },
+    {
+      "Head": "奇异值分解",
+      "Relation": "APPLIED_TO",
+      "Tail": "线性变换",
+      "Context": "SVD的几何解释是将矩阵代表的线性变换分解为旋转、缩放、旋转。"
+    },
+    {
+      "Head": "截断奇异值分解",
+      "Relation": "APPLIED_TO",
+      "Tail": "降维",
+      "Context": "截断SVD通过低秩近似实现数据压缩和降维。"
+    }
+  ]
+}
