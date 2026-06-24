@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理 - SynapseFlow</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --page: #f5f5f7;
+            --panel: rgba(255, 255, 255, 0.82);
+            --panel-strong: #ffffff;
+            --text: #1d1d1f;
+            --muted: #6e6e73;
+            --line: rgba(0, 0, 0, 0.1);
+            --blue: #007aff;
+            --blue-dark: #0066d6;
+            --green: #34c759;
+            --red: #ff3b30;
+            --yellow: #ffcc00;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 14% 8%, rgba(0, 122, 255, 0.14), transparent 30%),
+                radial-gradient(circle at 90% 18%, rgba(52, 199, 89, 0.12), transparent 28%),
+                linear-gradient(180deg, #fbfbfd 0%, var(--page) 100%);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+            letter-spacing: 0;
+        }
+
+        /* ── Topbar ── */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: rgba(245, 245, 247, 0.76);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: var(--text);
+            color: #fff;
+        }
+
+        .brand-title {
+            font-size: 17px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .brand-subtitle {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 1px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-link {
+            min-height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 0 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.72);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        /* ── Shell ── */
+        .shell {
+            width: min(1480px, calc(100% - 48px));
+            margin: 28px auto 48px;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(30px, 4vw, 54px);
+            line-height: 1.04;
+            font-weight: 750;
+        }
+
+        .hero p {
+            max-width: 680px;
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.55;
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 0;
+            border-radius: 999px;
+            padding: 0 16px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            font: inherit;
+            letter-spacing: 0;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-primary {
+            color: #fff;
+            background: var(--blue);
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-dark);
+        }
+
+        .btn-secondary {
+            color: var(--text);
+            background: rgba(0, 0, 0, 0.07);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-danger {
+            color: #fff;
+            background: var(--red);
+        }
+
+        .btn-danger:hover {
+            background: #e0342a;
+        }
+
+        /* ── Workspace ── */
+        .workspace {
+            display: grid;
+            grid-template-columns: minmax(0, 5fr) minmax(390px, 7fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        /* ── Panels ── */
+        .panel {
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            min-height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 16px 18px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 720;
+            font-size: 15px;
+        }
+
+        .panel-title i {
+            color: var(--blue);
+            font-size: 18px;
+        }
+
+        .panel-body {
+            padding: 18px;
+        }
+
+        /* ── Session count badge ── */
+        .count-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 22px;
+            height: 22px;
+            padding: 0 7px;
+            border-radius: 999px;
+            background: var(--blue);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* ── Config Table ── */
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .config-table th,
+        .config-table td {
+            padding: 11px 14px;
+            font-size: 13px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .config-table th {
+            color: var(--muted);
+            font-weight: 650;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            width: 140px;
+        }
+
+        .config-table td {
+            font-weight: 500;
+            color: var(--text);
+            word-break: break-all;
+        }
+
+        .config-table tr:last-child th,
+        .config-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .val-unset {
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        /* ── Session Cards ── */
+        .session-card {
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            border-radius: var(--radius);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-left: 4px solid var(--blue);
+            padding: 18px;
+            margin-bottom: 14px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .session-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .session-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .session-id {
+            font-size: 15px;
+            font-weight: 720;
+            color: var(--blue);
+        }
+
+        .session-transport {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .session-badges {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* ── Status Badges ── */
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 650;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-speaking {
+            background: rgba(52, 199, 89, 0.12);
+            color: #0b6b2b;
+        }
+
+        .badge-silent {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--muted);
+        }
+
+        .badge-recording {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--red);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.35); }
+            70% { box-shadow: 0 0 0 6px rgba(255, 59, 48, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+        }
+
+        /* ── Session Details ── */
+        .session-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 24px;
+        }
+
+        .session-detail-item {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .session-detail-item strong {
+            color: var(--muted);
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .custom-opt-pre {
+            margin: 6px 0 0;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: var(--radius);
+            font-size: 11px;
+            font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+            color: var(--text);
+            max-height: 120px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--muted);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: rgba(0, 0, 0, 0.12);
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .empty-state h5 {
+            margin: 0 0 6px;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text);
+        }
+
+        .empty-state p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        /* ── Skeleton Loading ── */
+        .skeleton {
+            background: linear-gradient(90deg,
+                rgba(0, 0, 0, 0.06) 25%,
+                rgba(0, 0, 0, 0.03) 50%,
+                rgba(0, 0, 0, 0.06) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.6s ease infinite;
+            border-radius: 6px;
+            height: 18px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ── Spin animation for refresh ── */
+        .spin {
+            animation: rotation 0.8s linear infinite;
+        }
+
+        @keyframes rotation {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(359deg); }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 1080px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .topbar {
+                height: auto;
+                padding: 14px 16px;
+                align-items: flex-start;
+                gap: 12px;
+                flex-direction: column;
+            }
+
+            .nav-actions {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 2px;
+            }
+
+            .shell {
+                width: min(100% - 24px, 1480px);
+                margin-top: 18px;
+            }
+
+            .hero {
+                display: block;
+            }
+
+            .hero .btn {
+                margin-top: 14px;
+            }
+
+            .session-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ── Topbar ── -->
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark"><i class="bi bi-cpu-fill"></i></div>
+            <div>
+                <div class="brand-title">SynapseFlow Digital Tutor</div>
+                <div class="brand-subtitle">RAG powered live avatar</div>
+            </div>
+        </div>
+        <nav class="nav-actions">
+            <a class="nav-link" href="/index.html"><i class="bi bi-house"></i>主页</a>
+            <a class="nav-link" href="/avatar.html" target="_blank"><i class="bi bi-person-bounding-box"></i>Avatar 生成</a>
+        </nav>
+    </header>
+
+    <!-- ── Main Content ── -->
+    <main class="shell">
+        <section class="hero">
+            <div>
+                <h1>后台管理控制台</h1>
+                <p>实时监控数字人系统全局配置与活跃会话状态。</p>
+            </div>
+            <button class="btn btn-primary" id="btnRefresh" onclick="refreshData()">
+                <i class="bi bi-arrow-clockwise" id="refreshIcon"></i>刷新数据
+            </button>
+        </section>
+
+        <section class="workspace">
+            <!-- Left: Global Config -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="bi bi-gear-fill"></i>全局配置</div>
+                </div>
+                <div class="panel-body">
+                    <table class="config-table" id="configTable">
+                        <tbody>
+                            <tr><th>加载中...</th><td><div class="skeleton"></div></td></tr>
+                            <tr><th>加载中...</th><td><div class="skeleton"></div></td></tr>
+                            <tr><th>加载中...</th><td><div class="skeleton"></div></td></tr>
+                            <tr><th>加载中...</th><td><div class="skeleton"></div></td></tr>
+                            <tr><th>加载中...</th><td><div class="skeleton"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right: Active Sessions -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="bi bi-people-fill"></i>活跃会话</div>
+                    <span class="count-badge" id="sessionCount">0</span>
+                </div>
+                <div class="panel-body" id="sessionsContainer">
+                    <!-- Skeleton cards -->
+                    <div class="session-card" style="border-left-color: rgba(0,0,0,0.08);">
+                        <div class="skeleton" style="width: 40%; height: 22px; margin-bottom: 14px;"></div>
+                        <div class="skeleton" style="width: 80%; margin-bottom: 10px;"></div>
+                        <div class="skeleton" style="width: 60%;"></div>
+                    </div>
+                    <div class="session-card" style="border-left-color: rgba(0,0,0,0.08);">
+                        <div class="skeleton" style="width: 35%; height: 22px; margin-bottom: 14px;"></div>
+                        <div class="skeleton" style="width: 70%; margin-bottom: 10px;"></div>
+                        <div class="skeleton" style="width: 50%;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const configLabels = {
+            'model': '数字人模型',
+            'avatar_id': '默认角色 ID',
+            'tts': 'TTS 引擎',
+            'REF_FILE': '语音参考',
+            'transport': '流媒体协议',
+            'listenport': '监听端口',
+            'batch_size': '推理批次 (Batch)',
+            'fps': '视频帧率 (FPS)',
+            'push_url': '推流地址'
+        };
+
+        async function fetchConfig() {
+            try {
+                const response = await fetch('/api/admin/config');
+                const result = await response.json();
+                if (result.code === 0) {
+                    renderConfig(result.data.config);
+                } else {
+                    console.error('Failed to fetch config:', result.msg);
+                }
+            } catch (err) {
+                console.error('Network error fetching config', err);
+            }
+        }
+
+        async function fetchSessions() {
+            try {
+                const response = await fetch('/api/admin/sessions');
+                const result = await response.json();
+                if (result.code === 0) {
+                    renderSessions(result.data.sessions);
+                    document.getElementById('sessionCount').textContent = result.data.sessions.length;
+                } else {
+                    console.error('Failed to fetch sessions:', result.msg);
+                }
+            } catch (err) {
+                console.error('Network error fetching sessions', err);
+            }
+        }
+
+        function renderConfig(config) {
+            const tbody = document.querySelector('#configTable tbody');
+            tbody.innerHTML = '';
+
+            for (const [key, label] of Object.entries(configLabels)) {
+                if (config[key] !== undefined) {
+                    const tr = document.createElement('tr');
+                    const th = document.createElement('th');
+                    th.textContent = label;
+
+                    const td = document.createElement('td');
+                    if (config[key] === '') {
+                        td.innerHTML = '<span class="val-unset">未设置</span>';
+                    } else {
+                        td.textContent = config[key];
+                    }
+
+                    tr.appendChild(th);
+                    tr.appendChild(td);
+                    tbody.appendChild(tr);
+                }
+            }
+        }
+
+        function renderSessions(sessions) {
+            const container = document.getElementById('sessionsContainer');
+            container.innerHTML = '';
+
+            if (sessions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <h5>暂无活跃的会话连接</h5>
+                        <p>当用户在前端发起连接时，此列表将自动更新。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            sessions.forEach(session => {
+                const statusBadge = session.speaking
+                    ? `<span class="badge-status badge-speaking"><i class="bi bi-mic-fill"></i> 说话中</span>`
+                    : `<span class="badge-status badge-silent"><i class="bi bi-mic-mute-fill"></i> 静音</span>`;
+
+                const recBadge = session.recording
+                    ? `<span class="badge-status badge-recording"><i class="bi bi-record-circle"></i> 录制中</span>`
+                    : '';
+
+                let customOptContent;
+                if (session.customopt && session.customopt.length > 0) {
+                    customOptContent = `<pre class="custom-opt-pre">${escapeHtml(JSON.stringify(session.customopt, null, 2))}</pre>`;
+                } else {
+                    customOptContent = '<span class="val-unset">无</span>';
+                }
+
+                const card = document.createElement('div');
+                card.className = 'session-card';
+                card.innerHTML = `
+                    <div class="session-header">
+                        <div>
+                            <div class="session-id">SID: ${escapeHtml(String(session.sessionid))}</div>
+                            <div class="session-transport">传输层: ${escapeHtml(session.transport || '默认')}</div>
+                        </div>
+                        <div class="session-badges">
+                            ${statusBadge}
+                            ${recBadge}
+                        </div>
+                    </div>
+                    <div class="session-details">
+                        <div class="session-detail-item">
+                            <strong>角色 ID:</strong>${escapeHtml(String(session.avatar_id || ''))}
+                        </div>
+                        <div class="session-detail-item">
+                            <strong>核心模型:</strong>${escapeHtml(String(session.model || ''))}
+                        </div>
+                        <div class="session-detail-item">
+                            <strong>语音参考:</strong>${escapeHtml(String(session.REF_FILE || ''))}
+                        </div>
+                        <div class="session-detail-item">
+                            <strong><i class="bi bi-sliders"></i> 动作编排:</strong>
+                            ${customOptContent}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function refreshData() {
+            const icon = document.getElementById('refreshIcon');
+            icon.classList.add('spin');
+
+            Promise.all([fetchConfig(), fetchSessions()]).finally(() => {
+                setTimeout(() => icon.classList.remove('spin'), 600);
+            });
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchConfig();
+            fetchSessions();
+
+            setInterval(fetchSessions, 5000);
+        });
+    </script>
+</body>
+</html>

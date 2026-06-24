@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar 生成 - SynapseFlow</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --page: #f5f5f7;
+            --panel: rgba(255, 255, 255, 0.82);
+            --panel-strong: #ffffff;
+            --text: #1d1d1f;
+            --muted: #6e6e73;
+            --line: rgba(0, 0, 0, 0.1);
+            --blue: #007aff;
+            --blue-dark: #0066d6;
+            --green: #34c759;
+            --red: #ff3b30;
+            --yellow: #ffcc00;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 14% 8%, rgba(0, 122, 255, 0.14), transparent 30%),
+                radial-gradient(circle at 90% 18%, rgba(52, 199, 89, 0.12), transparent 28%),
+                linear-gradient(180deg, #fbfbfd 0%, var(--page) 100%);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+            letter-spacing: 0;
+        }
+
+        button, input, textarea, select {
+            font: inherit;
+            letter-spacing: 0;
+        }
+
+        /* ── Topbar ── */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: rgba(245, 245, 247, 0.76);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: var(--text);
+            color: #fff;
+        }
+
+        .brand-title {
+            font-size: 17px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .brand-subtitle {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 1px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-link {
+            min-height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 0 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.72);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.92);
+        }
+
+        /* ── Shell & Hero ── */
+        .shell {
+            width: min(1480px, calc(100% - 48px));
+            margin: 28px auto 48px;
+        }
+
+        .hero {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(30px, 4vw, 54px);
+            line-height: 1.04;
+            font-weight: 750;
+        }
+
+        .hero p {
+            max-width: 680px;
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.55;
+        }
+
+        /* ── Workspace grid ── */
+        .workspace {
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        /* ── Panel (glassmorphism) ── */
+        .panel {
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            min-height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 16px 18px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 720;
+            font-size: 15px;
+        }
+
+        .panel-title i {
+            color: var(--blue);
+            font-size: 18px;
+        }
+
+        .panel-body {
+            padding: 18px;
+        }
+
+        /* ── Fields ── */
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            min-width: 0;
+        }
+
+        .field + .field {
+            margin-top: 14px;
+        }
+
+        label {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        input, select {
+            width: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.78);
+            color: var(--text);
+            outline: none;
+            padding: 11px 12px;
+        }
+
+        input:focus, select:focus {
+            border-color: rgba(0, 122, 255, 0.55);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.12);
+        }
+
+        input[type="file"] {
+            padding: 9px 12px;
+            cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button {
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--text);
+            font-weight: 600;
+            font-size: 12px;
+            padding: 5px 14px;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: rgba(255, 255, 255, 0.96);
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 0;
+            border-radius: 999px;
+            padding: 0 16px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 14px;
+            transition: background 0.15s, opacity 0.15s;
+        }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.58;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background: var(--blue);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--blue-dark);
+        }
+
+        .btn-danger-outline {
+            color: var(--red);
+            background: rgba(255, 59, 48, 0.08);
+            border: 1px solid rgba(255, 59, 48, 0.22);
+        }
+
+        .btn-danger-outline:hover:not(:disabled) {
+            background: rgba(255, 59, 48, 0.15);
+        }
+
+        .btn-full {
+            width: 100%;
+            margin-top: 18px;
+        }
+
+        /* ── Advanced params toggle ── */
+        .advanced-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            color: var(--blue);
+            font-size: 13px;
+            font-weight: 650;
+            cursor: pointer;
+            user-select: none;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .advanced-toggle:hover {
+            color: var(--blue-dark);
+        }
+
+        .advanced-toggle .chevron {
+            font-size: 12px;
+            transition: transform 0.2s;
+        }
+
+        .advanced-toggle.open .chevron {
+            transform: rotate(90deg);
+        }
+
+        .advanced-content {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.025);
+            border-radius: var(--radius);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .advanced-content.open {
+            display: block;
+        }
+
+        .param-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .param-grid .field + .field {
+            margin-top: 0;
+        }
+
+        /* ── Task list ── */
+        .task-scroll {
+            max-height: 620px;
+            overflow-y: auto;
+        }
+
+        .task-empty {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .task-item {
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .task-id {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--blue);
+            word-break: break-all;
+        }
+
+        .task-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .task-meta b {
+            color: var(--text);
+            font-weight: 650;
+        }
+
+        .task-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .task-date {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 5px;
+        }
+
+        /* ── Status badges ── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-model {
+            background: rgba(0, 0, 0, 0.06);
+            color: var(--text);
+        }
+
+        .badge-pending {
+            background: rgba(255, 204, 0, 0.18);
+            color: #8a6d00;
+            border: 1px solid rgba(255, 204, 0, 0.25);
+        }
+
+        .badge-running {
+            background: rgba(0, 122, 255, 0.12);
+            color: var(--blue-dark);
+            border: 1px solid rgba(0, 122, 255, 0.2);
+        }
+
+        .badge-completed {
+            background: rgba(52, 199, 89, 0.14);
+            color: #0b6b2b;
+            border: 1px solid rgba(52, 199, 89, 0.24);
+        }
+
+        .badge-failed {
+            background: rgba(255, 59, 48, 0.1);
+            color: #a31308;
+            border: 1px solid rgba(255, 59, 48, 0.18);
+        }
+
+        /* ── Progress bar ── */
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.06);
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--blue), #5ac8fa);
+            transition: width 0.4s ease;
+            position: relative;
+        }
+
+        .progress-fill.animated {
+            background-size: 20px 20px;
+            background-image: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.2) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.2) 75%,
+                transparent 75%,
+                transparent
+            );
+            animation: progressStripe 0.8s linear infinite;
+        }
+
+        @keyframes progressStripe {
+            from { background-position: 0 0; }
+            to { background-position: 20px 0; }
+        }
+
+        .progress-text {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* ── Error message ── */
+        .error-msg {
+            margin-top: 8px;
+            padding: 10px 12px;
+            border-radius: var(--radius);
+            color: #8a140e;
+            background: rgba(255, 59, 48, 0.08);
+            border: 1px solid rgba(255, 59, 48, 0.16);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .task-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+
+        .task-actions .btn {
+            min-height: 30px;
+            font-size: 12px;
+            padding: 0 12px;
+        }
+
+        /* ── Refresh indicator ── */
+        .refresh-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .spin {
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(359deg); }
+        }
+
+        /* ── Loading spinner ── */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-top-color: var(--blue);
+            border-radius: 50%;
+            animation: rotation 0.7s linear infinite;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 1080px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .topbar {
+                height: auto;
+                padding: 14px 16px;
+                align-items: flex-start;
+                gap: 12px;
+                flex-direction: column;
+            }
+
+            .nav-actions {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 2px;
+            }
+
+            .shell {
+                width: min(100% - 24px, 1480px);
+                margin-top: 18px;
+            }
+
+            .hero {
+                display: block;
+            }
+
+            .param-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ── Topbar ── -->
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark"><i class="bi bi-cpu-fill"></i></div>
+            <div>
+                <div class="brand-title">SynapseFlow Digital Tutor</div>
+                <div class="brand-subtitle">RAG powered live avatar</div>
+            </div>
+        </div>
+        <nav class="nav-actions">
+            <a class="nav-link" href="/index.html"><i class="bi bi-house-door"></i>主页</a>
+            <a class="nav-link" href="/admin.html" target="_blank"><i class="bi bi-speedometer2"></i>后台管理</a>
+        </nav>
+    </header>
+
+    <!-- ── Main content ── -->
+    <main class="shell">
+        <section class="hero">
+            <div>
+                <h1>Avatar 形象生成</h1>
+                <p>上传视频素材，选择算法模型，系统将自动生成可用于数字人驱动的 Avatar 数据。生成完成后即可在主页中使用对应 Avatar ID 进行实时对话。</p>
+            </div>
+        </section>
+
+        <section class="workspace">
+            <!-- ── Left: Create task form ── -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="bi bi-plus-circle-fill"></i>创建新生成任务</div>
+                </div>
+                <div class="panel-body">
+                    <form id="taskForm">
+                        <div class="field">
+                            <label for="modelSelect">算法模型</label>
+                            <select name="model" id="modelSelect" required>
+                                <option value="wav2lip">Wav2Lip</option>
+                                <option value="musetalk">MuseTalk</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="avatarIdInput">Avatar ID</label>
+                            <input type="text" id="avatarIdInput" name="avatar_id" placeholder="如: wav2lip256_test" required>
+                        </div>
+
+                        <div class="field">
+                            <label for="videoFileInput">视频文件</label>
+                            <input type="file" id="videoFileInput" name="video_file" accept="video/*" required>
+                        </div>
+
+                        <!-- Advanced params collapsible -->
+                        <button type="button" class="advanced-toggle" id="advancedToggle">
+                            <i class="bi bi-gear"></i>
+                            高级参数 (可选)
+                            <i class="bi bi-chevron-right chevron"></i>
+                        </button>
+
+                        <div class="advanced-content" id="advancedContent">
+                            <div class="param-grid">
+                                <div class="field">
+                                    <label for="imgSizeInput">图像大小</label>
+                                    <input type="number" id="imgSizeInput" name="img_size" value="256">
+                                </div>
+                                <div class="field">
+                                    <label for="bboxShiftInput">BBox Shift (musetalk)</label>
+                                    <input type="number" id="bboxShiftInput" name="bbox_shift" value="0">
+                                </div>
+                                <div class="field">
+                                    <label for="padsInput">Pads (上下左右)</label>
+                                    <input type="text" id="padsInput" name="pads" value="0 10 0 0" placeholder="0 10 0 0">
+                                </div>
+                                <div class="field">
+                                    <label for="faceDetInput">人脸检测批大小</label>
+                                    <input type="number" id="faceDetInput" name="face_det_batch_size" value="4">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full" id="submitBtn">
+                            <i class="bi bi-cloud-arrow-up-fill"></i>提交生成任务
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ── Right: Task list ── -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="bi bi-list-task"></i>任务列表</div>
+                    <div class="refresh-indicator" id="refreshInfo">
+                        <i class="bi bi-arrow-repeat spin"></i> 自动更新中
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="task-scroll" id="taskList">
+                        <div class="task-empty">
+                            <span class="spinner"></span>
+                            <div style="margin-top: 12px;">正在加载任务列表…</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<script>
+    const taskForm = document.getElementById('taskForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const taskList = document.getElementById('taskList');
+    const advancedToggle = document.getElementById('advancedToggle');
+    const advancedContent = document.getElementById('advancedContent');
+
+    // ── Advanced params toggle ──
+    advancedToggle.addEventListener('click', () => {
+        const isOpen = advancedContent.classList.toggle('open');
+        advancedToggle.classList.toggle('open', isOpen);
+    });
+
+    // ── Submit task ──
+    taskForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner" style="width:14px;height:14px;border-width:2px;"></span> 正在上传并创建任务…';
+
+        const formData = new FormData(taskForm);
+
+        try {
+            const response = await fetch('/api/avatar/task', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+
+            if (result.code === 0) {
+                alert('任务提交成功! Task ID: ' + result.data.task_id);
+                refreshTasks();
+            } else {
+                alert('提交失败: ' + result.msg);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('提交发生网络错误');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="bi bi-cloud-arrow-up-fill"></i>提交生成任务';
+        }
+    });
+
+    // ── Refresh tasks ──
+    async function refreshTasks() {
+        try {
+            const response = await fetch('/api/avatar/tasks');
+            const result = await response.json();
+
+            if (result.code === 0) {
+                renderTasks(result.data.tasks);
+            }
+        } catch (error) {
+            console.error('Load tasks failed:', error);
+        }
+    }
+
+    function renderTasks(tasks) {
+        if (!tasks || tasks.length === 0) {
+            taskList.innerHTML = '<div class="task-empty">暂无任务</div>';
+            return;
+        }
+
+        let html = '';
+        tasks.forEach(task => {
+            const date = new Date(task.start_time * 1000).toLocaleString();
+            const isPending = task.status === 'pending';
+            const isRunning = task.status === 'running';
+            const isCompleted = task.status === 'completed';
+
+            html += `
+                <div class="task-item">
+                    <div class="task-row">
+                        <div>
+                            <div class="task-id"># ${task.task_id}</div>
+                            <div class="task-meta">
+                                <span class="badge badge-model">${task.model_type}</span>
+                                Avatar: <b>${task.avatar_id}</b>
+                            </div>
+                        </div>
+                        <div class="task-right">
+                            <span class="badge badge-${task.status}">${task.status.toUpperCase()}</span>
+                            <div class="task-date">${date}</div>
+                        </div>
+                    </div>
+
+                    ${!isCompleted ? `
+                    <div class="progress-track">
+                        <div class="progress-fill ${isRunning ? 'animated' : ''}" style="width: ${task.progress}%"></div>
+                    </div>
+                    <div class="progress-text">${task.progress}%</div>` : ''}
+
+                    ${task.error_msg ? `<div class="error-msg">${task.error_msg}</div>` : ''}
+
+                    ${isPending ? `
+                    <div class="task-actions">
+                        <button class="btn btn-danger-outline" onclick="deleteTask('${task.task_id}')">
+                            <i class="bi bi-trash"></i> 取消任务
+                        </button>
+                    </div>` : ''}
+                </div>
+            `;
+        });
+        taskList.innerHTML = html;
+    }
+
+    async function deleteTask(taskId) {
+        if (!confirm('确定要取消此 Pending 任务吗?')) return;
+
+        try {
+            const response = await fetch(`/api/avatar/task/${taskId}`, {
+                method: 'DELETE'
+            });
+            const result = await response.json();
+            if (result.code === 0) {
+                refreshTasks();
+            } else {
+                alert(result.msg);
+            }
+        } catch (error) {
+            alert('删除请求失败');
+        }
+    }
+
+    // ── Init & auto refresh ──
+    refreshTasks();
+    setInterval(refreshTasks, 3000);
+</script>
+
+</body>
+</html>

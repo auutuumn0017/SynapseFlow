@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SynapseFlow Digital Tutor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --page: #f5f5f7;
+            --panel: rgba(255, 255, 255, 0.82);
+            --panel-strong: #ffffff;
+            --text: #1d1d1f;
+            --muted: #6e6e73;
+            --line: rgba(0, 0, 0, 0.1);
+            --blue: #007aff;
+            --blue-dark: #0066d6;
+            --green: #34c759;
+            --red: #ff3b30;
+            --yellow: #ffcc00;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 14% 8%, rgba(0, 122, 255, 0.14), transparent 30%),
+                radial-gradient(circle at 90% 18%, rgba(52, 199, 89, 0.12), transparent 28%),
+                linear-gradient(180deg, #fbfbfd 0%, var(--page) 100%);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+            letter-spacing: 0;
+        }
+
+        button, input, textarea, select {
+            font: inherit;
+            letter-spacing: 0;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: rgba(245, 245, 247, 0.76);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: var(--text);
+            color: #fff;
+        }
+
+        .brand-title {
+            font-size: 17px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .brand-subtitle {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 1px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-link, .pill {
+            min-height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 0 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.72);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .pill.connected {
+            color: #0b6b2b;
+            background: rgba(52, 199, 89, 0.14);
+            border-color: rgba(52, 199, 89, 0.24);
+        }
+
+        .shell {
+            width: min(1480px, calc(100% - 48px));
+            margin: 28px auto 48px;
+        }
+
+        .hero {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(30px, 4vw, 54px);
+            line-height: 1.04;
+            font-weight: 750;
+        }
+
+        .hero p {
+            max-width: 680px;
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.55;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(390px, 0.95fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            min-height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 16px 18px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 720;
+            font-size: 15px;
+        }
+
+        .panel-title i {
+            color: var(--blue);
+            font-size: 18px;
+        }
+
+        .panel-body {
+            padding: 18px;
+        }
+
+        .digital-human {
+            min-height: 620px;
+        }
+
+        .video-stage {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            background: #050505;
+            overflow: hidden;
+            border-radius: var(--radius);
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+            background: #050505;
+        }
+
+        audio {
+            display: none;
+        }
+
+        .stage-overlay {
+            position: absolute;
+            left: 14px;
+            bottom: 14px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--red);
+        }
+
+        .status-dot.on {
+            background: var(--green);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            min-width: 0;
+        }
+
+        label {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.78);
+            color: var(--text);
+            outline: none;
+            padding: 11px 12px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 96px;
+            line-height: 1.45;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: rgba(0, 122, 255, 0.55);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.12);
+        }
+
+        .button-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .btn {
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 0;
+            border-radius: 999px;
+            padding: 0 16px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.58;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background: var(--blue);
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-dark);
+        }
+
+        .btn-secondary {
+            color: var(--text);
+            background: rgba(0, 0, 0, 0.07);
+        }
+
+        .btn-danger {
+            color: #fff;
+            background: var(--red);
+        }
+
+        .btn-icon {
+            width: 40px;
+            padding: 0;
+        }
+
+        .stack {
+            display: grid;
+            gap: 18px;
+        }
+
+        .answer-box {
+            min-height: 126px;
+            max-height: 220px;
+            overflow: auto;
+            margin-top: 12px;
+            padding: 14px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.68);
+            color: #2b2b2f;
+            line-height: 1.58;
+            white-space: pre-wrap;
+        }
+
+        .voice-state {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 28px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .voice-state.listening {
+            color: #0b6b2b;
+        }
+
+        .voice-pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--muted);
+        }
+
+        .voice-state.listening .voice-pulse {
+            background: var(--green);
+            box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.45);
+            animation: voicePulse 1.4s infinite;
+        }
+
+        @keyframes voicePulse {
+            70% {
+                box-shadow: 0 0 0 10px rgba(52, 199, 89, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(52, 199, 89, 0);
+            }
+        }
+
+        .graph-panel {
+            min-height: 330px;
+        }
+
+        .graph-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .graph-wrap {
+            height: 420px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background:
+                linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                rgba(255, 255, 255, 0.58);
+            background-size: 28px 28px;
+            overflow: hidden;
+        }
+
+        #knowledgeGraph {
+            width: 100%;
+            height: 100%;
+            display: block;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .graph-node {
+            cursor: grab;
+        }
+
+        .graph-node:active {
+            cursor: grabbing;
+        }
+
+        .graph-empty {
+            height: 100%;
+            display: grid;
+            place-items: center;
+            color: var(--muted);
+            font-size: 13px;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .mini-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .switch input {
+            width: 38px;
+            height: 22px;
+            appearance: none;
+            padding: 0;
+            border: 0;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.18);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .switch input::after {
+            content: "";
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            left: 2px;
+            top: 2px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: transform 0.18s ease;
+        }
+
+        .switch input:checked {
+            background: var(--green);
+        }
+
+        .switch input:checked::after {
+            transform: translateX(16px);
+        }
+
+        .alert {
+            display: none;
+            margin-top: 12px;
+            padding: 11px 12px;
+            border-radius: var(--radius);
+            color: #8a140e;
+            background: rgba(255, 59, 48, 0.1);
+            border: 1px solid rgba(255, 59, 48, 0.18);
+            font-size: 13px;
+        }
+
+        @media (max-width: 1080px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+
+            .digital-human {
+                min-height: auto;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .topbar {
+                height: auto;
+                padding: 14px 16px;
+                align-items: flex-start;
+                gap: 12px;
+                flex-direction: column;
+            }
+
+            .nav-actions {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 2px;
+            }
+
+            .shell {
+                width: min(100% - 24px, 1480px);
+                margin-top: 18px;
+            }
+
+            .hero {
+                display: block;
+            }
+
+            .controls-grid, .mini-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-row .btn {
+                flex: 1 1 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark"><i class="bi bi-cpu-fill"></i></div>
+            <div>
+                <div class="brand-title">SynapseFlow Digital Tutor</div>
+                <div class="brand-subtitle">RAG powered live avatar</div>
+            </div>
+        </div>
+        <nav class="nav-actions">
+            <a class="nav-link" href="/avatar.html" target="_blank"><i class="bi bi-person-bounding-box"></i>Avatar 生成</a>
+            <a class="nav-link" href="/admin.html" target="_blank"><i class="bi bi-speedometer2"></i>后台管理</a>
+            <span class="pill" id="statusBadge"><span class="status-dot" id="statusDot"></span><span id="statusText">未连接</span></span>
+            <span class="pill" id="sessionIdDisplay">SID: -</span>
+        </nav>
+    </header>
+
+    <main class="shell">
+        <section class="hero">
+            <div>
+                <h1>知识图谱驱动的数字人问答</h1>
+                <p>连接数字人后，在 RAG 对话里输入问题。系统会调用 Backend_RAG 检索知识图谱、生成回答，并让数字人把答案说出来。</p>
+            </div>
+        </section>
+
+        <section class="workspace">
+            <div class="panel digital-human">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="bi bi-display"></i>数字人页面</div>
+                    <div class="graph-toolbar"><span id="connectionHint">WebRTC idle</span></div>
+                </div>
+                <div class="panel-body">
+                    <div class="video-stage">
+                        <video id="video" autoplay playsinline muted controls></video>
+                        <audio id="audio" autoplay></audio>
+                        <div class="stage-overlay">
+                            <span class="pill"><span class="status-dot" id="stageStatusDot"></span><span id="stageStatusText">等待连接</span></span>
+                        </div>
+                    </div>
+
+                    <div class="controls-grid">
+                        <div class="field">
+                            <label for="offerAvatar">Avatar ID</label>
+                            <input id="offerAvatar" type="text" placeholder="wav2lip256_avatar1">
+                        </div>
+                    </div>
+
+                    <div class="button-row">
+                        <button class="btn btn-primary" id="btnStart" onclick="start()"><i class="bi bi-play-fill"></i>连接</button>
+                        <button class="btn btn-danger" id="btnStop" onclick="stop()" style="display:none;"><i class="bi bi-stop-fill"></i>断开</button>
+                    </div>
+                    <div id="offerError" class="alert"></div>
+                </div>
+            </div>
+
+            <div class="stack">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title"><i class="bi bi-chat-square-text"></i>RAG 对话</div>
+                        <div class="graph-toolbar"><span id="ragMeta">未提问</span></div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="field">
+                            <label for="ragQuestion">输入问题</label>
+                            <textarea id="ragQuestion" placeholder="例如：验证集和测试集有什么区别？"></textarea>
+                        </div>
+                        <div class="button-row">
+                            <label class="switch"><input type="checkbox" id="ragInterrupt" checked>打断当前讲话</label>
+                            <button class="btn btn-secondary btn-icon" id="btnVoiceInput" onclick="toggleRagVoiceInput()" title="语音输入"><i class="bi bi-mic"></i></button>
+                            <button class="btn btn-primary" id="btnRagAsk" onclick="sendRagQuestion()"><i class="bi bi-send"></i>提问</button>
+                        </div>
+                        <div class="voice-state" id="voiceState"><span class="voice-pulse"></span><span id="voiceStateText">语音输入待命</span></div>
+                        <div class="answer-box" id="ragAnswer">RAG 回答会显示在这里。</div>
+                    </div>
+                </div>
+
+                <div class="panel graph-panel">
+                    <div class="panel-header">
+                        <div class="panel-title"><i class="bi bi-diagram-3"></i>检索到的知识图谱</div>
+                        <div class="graph-toolbar"><span id="graphStats">0 nodes / 0 links</span></div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="graph-wrap" id="graphWrap">
+                            <div class="graph-empty" id="graphEmpty">提问后，这里会显示 Backend_RAG 返回的核心知识点和关联节点。</div>
+                            <svg id="knowledgeGraph" role="img" aria-label="Knowledge graph" style="display:none;"></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title"><i class="bi bi-type"></i>文本驱动</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="field">
+                            <label for="txtMessage">让数字人直接朗读</label>
+                            <textarea id="txtMessage" placeholder="输入要朗读的文本">你好，欢迎使用 SynapseFlow 数字人。</textarea>
+                        </div>
+                        <div class="button-row">
+                            <label class="switch"><input type="checkbox" id="txtInterrupt" checked>打断</label>
+                            <button class="btn btn-primary" onclick="sendText()"><i class="bi bi-volume-up"></i>朗读</button>
+                            <button class="btn btn-secondary btn-icon" onclick="interrupt()" title="打断讲话"><i class="bi bi-stop-circle"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<script>
+let pc = null;
+let sessionid = null;
+let ragRecognition = null;
+let ragListening = false;
+let ragFinalTranscript = '';
+
+function updateStatus(connected) {
+    const statusBadge = document.getElementById('statusBadge');
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    const stageDot = document.getElementById('stageStatusDot');
+    const stageText = document.getElementById('stageStatusText');
+    const hint = document.getElementById('connectionHint');
+
+    statusBadge.classList.toggle('connected', connected);
+    statusDot.classList.toggle('on', connected);
+    stageDot.classList.toggle('on', connected);
+    statusText.textContent = connected ? '已连接' : '未连接';
+    stageText.textContent = connected ? '数字人在线' : '等待连接';
+    hint.textContent = connected ? 'WebRTC connected' : 'WebRTC idle';
+}
+
+function setSessionId(sid) {
+    sessionid = sid;
+    document.getElementById('sessionIdDisplay').textContent = 'SID: ' + (sid || '-');
+}
+
+function showError(msg) {
+    const el = document.getElementById('offerError');
+    el.textContent = msg;
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 8000);
+}
+
+function negotiate() {
+    pc.addTransceiver('video', { direction: 'recvonly' });
+    pc.addTransceiver('audio', { direction: 'recvonly' });
+    return pc.createOffer()
+        .then(offer => pc.setLocalDescription(offer))
+        .then(() => new Promise(resolve => {
+            if (pc.iceGatheringState === 'complete') {
+                resolve();
+                return;
+            }
+            const check = () => {
+                if (pc.iceGatheringState === 'complete') {
+                    pc.removeEventListener('icegatheringstatechange', check);
+                    resolve();
+                }
+            };
+            pc.addEventListener('icegatheringstatechange', check);
+        }))
+        .then(() => {
+            const offer = pc.localDescription;
+            const body = {
+                sdp: offer.sdp,
+                type: offer.type,
+                avatar: document.getElementById('offerAvatar').value || undefined
+            };
+            return fetch('/offer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            });
+        })
+        .then(res => res.json())
+        .then(answer => {
+            if (answer.code && answer.code !== 0) throw new Error(answer.msg || 'Unknown server error');
+            if (!answer.sdp) throw new Error('Server returned no SDP');
+            if (answer.sessionid) setSessionId(answer.sessionid);
+            return pc.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: answer.sdp }));
+        })
+        .catch(e => {
+            showError(e.message || String(e));
+            if (pc) {
+                pc.close();
+                pc = null;
+            }
+            updateStatus(false);
+            setSessionId(null);
+            document.getElementById('btnStart').style.display = 'inline-flex';
+            document.getElementById('btnStop').style.display = 'none';
+        });
+}
+
+function start() {
+    document.getElementById('offerError').style.display = 'none';
+    const config = { sdpSemantics: 'unified-plan' };
+    pc = new RTCPeerConnection(config);
+    pc.addEventListener('track', evt => {
+        if (evt.track.kind === 'video') {
+            document.getElementById('video').srcObject = evt.streams[0];
+        } else {
+            document.getElementById('audio').srcObject = evt.streams[0];
+        }
+    });
+    pc.addEventListener('connectionstatechange', () => {
+        if (pc.connectionState === 'connected') updateStatus(true);
+        if (pc.connectionState === 'disconnected' || pc.connectionState === 'failed') {
+            updateStatus(false);
+            setSessionId(null);
+        }
+    });
+    negotiate();
+    document.getElementById('btnStart').style.display = 'none';
+    document.getElementById('btnStop').style.display = 'inline-flex';
+}
+
+function stop() {
+    if (pc) {
+        pc.close();
+        pc = null;
+    }
+    updateStatus(false);
+    setSessionId(null);
+    document.getElementById('btnStart').style.display = 'inline-flex';
+    document.getElementById('btnStop').style.display = 'none';
+    document.getElementById('video').srcObject = null;
+    document.getElementById('audio').srcObject = null;
+}
+
+function requireSession() {
+    if (!sessionid) {
+        alert('请先连接数字人');
+        return false;
+    }
+    return true;
+}
+
+function getSpeechRecognition() {
+    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+
+function setVoiceState(text, listening = false) {
+    const state = document.getElementById('voiceState');
+    const stateText = document.getElementById('voiceStateText');
+    const button = document.getElementById('btnVoiceInput');
+    state.classList.toggle('listening', listening);
+    stateText.textContent = text;
+    button.innerHTML = listening ? '<i class="bi bi-stop-fill"></i>' : '<i class="bi bi-mic"></i>';
+    button.className = listening ? 'btn btn-danger btn-icon' : 'btn btn-secondary btn-icon';
+}
+
+function toggleRagVoiceInput() {
+    const SpeechRecognition = getSpeechRecognition();
+    if (!SpeechRecognition) {
+        setVoiceState('当前浏览器不支持语音识别，请使用 Chrome 或 Edge', false);
+        return;
+    }
+
+    if (ragListening && ragRecognition) {
+        ragRecognition.stop();
+        return;
+    }
+
+    ragFinalTranscript = '';
+    ragRecognition = new SpeechRecognition();
+    ragRecognition.lang = 'zh-CN';
+    ragRecognition.continuous = true;
+    ragRecognition.interimResults = true;
+
+    ragRecognition.onstart = () => {
+        ragListening = true;
+        setVoiceState('正在听，请说出你的问题', true);
+    };
+
+    ragRecognition.onresult = event => {
+        let interimTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+                ragFinalTranscript += transcript;
+            } else {
+                interimTranscript += transcript;
+            }
+        }
+
+        const question = document.getElementById('ragQuestion');
+        question.value = (ragFinalTranscript + interimTranscript).trim();
+    };
+
+    ragRecognition.onerror = event => {
+        ragListening = false;
+        const messageMap = {
+            'not-allowed': '麦克风权限被拒绝',
+            'no-speech': '没有检测到语音',
+            'audio-capture': '没有找到可用麦克风',
+            'network': '语音识别网络异常',
+        };
+        setVoiceState(messageMap[event.error] || `语音识别失败：${event.error}`, false);
+    };
+
+    ragRecognition.onend = () => {
+        ragListening = false;
+        const question = document.getElementById('ragQuestion').value.trim();
+        setVoiceState(question ? '语音已写入问题框' : '语音输入待命', false);
+    };
+
+    ragRecognition.start();
+}
+
+function sendText() {
+    if (!requireSession()) return;
+    const text = document.getElementById('txtMessage').value.trim();
+    const type = 'echo';
+    const interrupt = document.getElementById('txtInterrupt').checked;
+    if (!text) return;
+
+    fetch('/human', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, type, interrupt, sessionid: String(sessionid) }),
+    }).then(r => r.json()).then(d => console.log('human:', d));
+}
+
+function sendRagQuestion() {
+    if (!requireSession()) return;
+    const query = document.getElementById('ragQuestion').value.trim();
+    const interrupt = document.getElementById('ragInterrupt').checked;
+    const answerEl = document.getElementById('ragAnswer');
+    const button = document.getElementById('btnRagAsk');
+    const meta = document.getElementById('ragMeta');
+    if (!query) return;
+
+    button.disabled = true;
+    button.innerHTML = '<i class="bi bi-hourglass-split"></i>思考中';
+    meta.textContent = '检索中';
+    answerEl.textContent = 'Backend_RAG 正在检索知识图谱并生成回答...';
+    renderKnowledgeGraph(null);
+
+    fetch('/rag_chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, interrupt, sessionid: String(sessionid) }),
+    })
+        .then(r => r.json())
+        .then(d => {
+            if (d.code !== 0) throw new Error(d.msg || 'RAG request failed');
+            answerEl.textContent = d.data.answer || '';
+            const graphData = d.data.rag && d.data.rag.graph_data ? d.data.rag.graph_data : null;
+            renderKnowledgeGraph(graphData);
+            meta.textContent = '回答完成';
+        })
+        .catch(e => {
+            answerEl.textContent = 'RAG error: ' + (e.message || String(e));
+            meta.textContent = '请求失败';
+            renderKnowledgeGraph(null);
+        })
+        .finally(() => {
+            button.disabled = false;
+            button.innerHTML = '<i class="bi bi-send"></i>提问';
+        });
+}
+
+function renderKnowledgeGraph(graph) {
+    window.__lastGraphData = graph;
+    if (window.__graphAnimId) { cancelAnimationFrame(window.__graphAnimId); window.__graphAnimId = null; }
+
+    const svg = document.getElementById('knowledgeGraph');
+    const empty = document.getElementById('graphEmpty');
+    const stats = document.getElementById('graphStats');
+    svg.replaceChildren();
+
+    const rawNodes = graph && Array.isArray(graph.nodes) ? graph.nodes : [];
+    const rawLinks = graph && Array.isArray(graph.links) ? graph.links : [];
+    stats.textContent = `${rawNodes.length} nodes / ${rawLinks.length} links`;
+
+    if (!rawNodes.length) {
+        svg.style.display = 'none';
+        empty.style.display = 'grid';
+        return;
+    }
+
+    empty.style.display = 'none';
+    svg.style.display = 'block';
+
+    const wrap = document.getElementById('graphWrap');
+    const W = wrap.clientWidth || 640;
+    const H = wrap.clientHeight || 320;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    const cx = W / 2, cy = H / 2, PAD = 36;
+
+    // ── build simulation data ──
+    const simNodes = rawNodes.map((n, i) => {
+        const angle = (Math.PI * 2 * i) / rawNodes.length - Math.PI / 2;
+        const r = 50 + Math.random() * 40;
+        return {
+            id: n.id, name: n.name || n.id, isCore: n.category === 'core',
+            x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r,
+            vx: 0, vy: 0, pinned: false
+        };
+    });
+    const nodeById = new Map(simNodes.map(n => [n.id, n]));
+    const simLinks = rawLinks
+        .filter(l => nodeById.has(l.source) && nodeById.has(l.target))
+        .map(l => ({ source: nodeById.get(l.source), target: nodeById.get(l.target), label: l.label }));
+
+    const ns = 'http://www.w3.org/2000/svg';
+
+    // ── draw links (behind nodes) ──
+    const linkEls = simLinks.map(link => {
+        const line = document.createElementNS(ns, 'line');
+        line.setAttribute('stroke', 'rgba(0, 122, 255, 0.28)');
+        line.setAttribute('stroke-width', '2');
+        svg.appendChild(line);
+        let label = null;
+        if (link.label) {
+            label = document.createElementNS(ns, 'text');
+            label.setAttribute('text-anchor', 'middle');
+            label.setAttribute('font-size', '10');
+            label.setAttribute('fill', '#6e6e73');
+            label.textContent = link.label;
+            svg.appendChild(label);
+        }
+        return { link, line, label };
+    });
+
+    // ── draw nodes on top ──
+    const nodeEls = simNodes.map(node => {
+        const g = document.createElementNS(ns, 'g');
+        g.classList.add('graph-node');
+
+        const circle = document.createElementNS(ns, 'circle');
+        circle.setAttribute('r', node.isCore ? 25 : 18);
+        circle.setAttribute('fill', node.isCore ? '#007aff' : '#ffffff');
+        circle.setAttribute('stroke', node.isCore ? '#0066d6' : 'rgba(0, 0, 0, 0.18)');
+        circle.setAttribute('stroke-width', node.isCore ? '3' : '2');
+        if (node.isCore) {
+            circle.style.filter = 'drop-shadow(0 0 6px rgba(0,122,255,0.35))';
+        }
+        g.appendChild(circle);
+
+        const dot = document.createElementNS(ns, 'circle');
+        dot.setAttribute('r', node.isCore ? 6 : 4);
+        dot.setAttribute('fill', node.isCore ? '#ffffff' : '#34c759');
+        g.appendChild(dot);
+
+        const text = document.createElementNS(ns, 'text');
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-size', node.isCore ? '13' : '12');
+        text.setAttribute('font-weight', node.isCore ? '700' : '600');
+        text.setAttribute('fill', '#1d1d1f');
+        text.textContent = node.name;
+        g.appendChild(text);
+
+        svg.appendChild(g);
+
+        // ── drag interaction ──
+        let dragOff = null;
+        g.addEventListener('pointerdown', e => {
+            e.preventDefault();
+            g.setPointerCapture(e.pointerId);
+            svg.appendChild(g);
+            const pt = getSvgPoint(svg, e);
+            dragOff = { x: node.x - pt.x, y: node.y - pt.y };
+            node.pinned = true;
+            alpha = Math.max(alpha, 0.35);
+        });
+        g.addEventListener('pointermove', e => {
+            if (!dragOff) return;
+            const pt = getSvgPoint(svg, e);
+            node.x = clamp(pt.x + dragOff.x, PAD, W - PAD);
+            node.y = clamp(pt.y + dragOff.y, PAD, H - PAD);
+            node.vx = 0; node.vy = 0;
+        });
+        const endDrag = e => {
+            if (dragOff && g.hasPointerCapture(e.pointerId)) g.releasePointerCapture(e.pointerId);
+            dragOff = null;
+            node.pinned = false;
+            alpha = Math.max(alpha, 0.15);
+        };
+        g.addEventListener('pointerup', endDrag);
+        g.addEventListener('pointercancel', endDrag);
+
+        return { node, g, circle, dot, text };
+    });
+
+    // ── Force simulation ──
+    let alpha = 1.0;
+    const ALPHA_DECAY = 0.006;
+    const ALPHA_MIN  = 0.003;
+    const VEL_DECAY  = 0.35;
+    const REPULSE    = -320;
+    const LINK_DIST  = 130;
+    const LINK_STR   = 0.055;
+    const CENTER_STR = 0.01;
+
+    function simulate() {
+        // center gravity
+        simNodes.forEach(n => {
+            if (n.pinned) return;
+            n.vx += (cx - n.x) * CENTER_STR * alpha;
+            n.vy += (cy - n.y) * CENTER_STR * alpha;
+        });
+        // charge repulsion (all pairs)
+        for (let i = 0; i < simNodes.length; i++) {
+            for (let j = i + 1; j < simNodes.length; j++) {
+                const a = simNodes[i], b = simNodes[j];
+                let dx = b.x - a.x, dy = b.y - a.y;
+                const d2 = dx * dx + dy * dy || 1;
+                const dist = Math.sqrt(d2);
+                const f = REPULSE * alpha / d2;
+                const fx = (dx / dist) * f, fy = (dy / dist) * f;
+                if (!a.pinned) { a.vx -= fx; a.vy -= fy; }
+                if (!b.pinned) { b.vx += fx; b.vy += fy; }
+            }
+        }
+        // link spring
+        simLinks.forEach(({ source: s, target: t }) => {
+            let dx = t.x - s.x, dy = t.y - s.y;
+            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+            const f = (dist - LINK_DIST) * LINK_STR * alpha;
+            const fx = (dx / dist) * f, fy = (dy / dist) * f;
+            if (!s.pinned) { s.vx += fx; s.vy += fy; }
+            if (!t.pinned) { t.vx -= fx; t.vy -= fy; }
+        });
+        // integrate velocities
+        simNodes.forEach(n => {
+            if (n.pinned) return;
+            n.vx *= (1 - VEL_DECAY);
+            n.vy *= (1 - VEL_DECAY);
+            n.x = clamp(n.x + n.vx, PAD, W - PAD);
+            n.y = clamp(n.y + n.vy, PAD, H - PAD);
+        });
+        alpha = Math.max(alpha * (1 - ALPHA_DECAY), 0);
+    }
+
+    function paint() {
+        nodeEls.forEach(({ node, circle, dot, text }) => {
+            circle.setAttribute('cx', node.x);
+            circle.setAttribute('cy', node.y);
+            dot.setAttribute('cx', node.x);
+            dot.setAttribute('cy', node.y);
+            text.setAttribute('x', node.x);
+            text.setAttribute('y', node.y + (node.isCore ? 42 : 34));
+        });
+        linkEls.forEach(({ link, line, label }) => {
+            line.setAttribute('x1', link.source.x);
+            line.setAttribute('y1', link.source.y);
+            line.setAttribute('x2', link.target.x);
+            line.setAttribute('y2', link.target.y);
+            if (label) {
+                label.setAttribute('x', (link.source.x + link.target.x) / 2);
+                label.setAttribute('y', (link.source.y + link.target.y) / 2 - 5);
+            }
+        });
+    }
+
+    function loop() {
+        if (alpha > ALPHA_MIN) simulate();
+        paint();
+        window.__graphAnimId = requestAnimationFrame(loop);
+    }
+    loop();
+}
+
+
+function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+}
+
+function getSvgPoint(svg, event) {
+    const point = svg.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    return point.matrixTransform(svg.getScreenCTM().inverse());
+}
+
+function interrupt() {
+    if (!sessionid) return;
+    fetch('/interrupt_talk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionid: String(sessionid) }),
+    }).then(r => r.json()).then(d => console.log('interrupt:', d));
+}
+
+window.addEventListener('resize', () => {
+    if (window.__lastGraphData) renderKnowledgeGraph(window.__lastGraphData);
+});
+</script>
+</body>
+</html>
