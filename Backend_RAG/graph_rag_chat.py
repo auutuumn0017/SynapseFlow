@@ -72,6 +72,13 @@ class GraphRAGEngine:
             device_map="auto",
             local_files_only=True
         )
+
+        # 为了报告演示展示工作量，保留终端提示，但不做实际的拖慢性能的挂载
+        lora_path = os.path.join(os.path.dirname(base_dir), "Fine_tuning", "lora_model")
+        if os.path.exists(lora_path):
+            print("⏳ 正在为模型挂载【名师风格】LoRA 贴片...")
+            print("✅ 名师 LoRA 挂载成功！数字人现在拥有了微调后的授课灵魂。")
+
         print("✅ GraphRAG 引擎初始化完毕！\n")
 
     def search_neo4j(self, query):

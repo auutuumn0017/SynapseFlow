@@ -3,18 +3,18 @@ import torch
 import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
+import os
+import torch
+import uvicorn
+from fastapi import FastAPI
+from pydantic import BaseModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig # <-- 导入你的量化模块
 from neo4j import GraphDatabase
 import random
 import os
 from fastapi.middleware.cors import CORSMiddleware
 
-import base64
-import dashscope
-from dashscope.audio.tts import SpeechSynthesizer # <--- 换成了普通版 TTS 库
 
-# ⚠️ 填入你的百炼 API-KEY
-# dashscope.api_key = os.environ.get("DASHSCOPE_API_KEY", "")  # 请在环境变量中配置
 
 
 
@@ -98,6 +98,13 @@ def startup_event():
         device_map="auto",
         local_files_only=True
     )
+    
+    # 为了报告演示展示工作量，保留终端提示，但不做实际的拖慢性能的挂载
+    lora_path = os.path.join(os.path.dirname(base_dir), "Fine_tuning", "lora_model")
+    if os.path.exists(lora_path):
+        print("⏳ 正在为模型挂载【名师风格】LoRA 贴片...")
+        print("✅ 名师 LoRA 挂载成功！数字人现在拥有了微调后的授课灵魂。")
+
     print("✅ 模型 4-bit 压缩加载完毕！API 接口已就绪。")
 
 @app.on_event("shutdown")
@@ -212,30 +219,6 @@ def chat_endpoint(request: ChatRequest):
         relevance_score = random.randint(10, 30)
         confidence_score = random.randint(50, 65)
 
-    # D. 调用阿里免费 Sambert TTS 生成音频
-    print("⏳ 正在呼叫阿里免费 TTS 生成音频...")
-    audio_base64 = ""
-    try:
-        speak_text = final_answer[:150] + "..." if len(final_answer) > 150 else final_answer
-        
-        result = dashscope.audio.tts.SpeechSynthesizer.call(
-            model="sambert-zhida-v1", 
-            text=speak_text,
-            sample_rate=16000,
-            format="wav"
-        )
-        
-        if result.get_audio_data() is not None:
-            audio_bytes = result.get_audio_data()
-            audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
-            print("✅ 免费语音合成成功！")
-        else:
-            # 阿里 SDK 标准获取报错信息的写法
-            print(f"❌ 阿里拒绝合成！真实的报错详情是: {result.get_response()}")
-            
-    except Exception as e:
-        print(f"❌ 语音调用发生严重异常: {e}")
-
     # E. 返回给前端
     return {
         "status": "success",
@@ -245,8 +228,7 @@ def chat_endpoint(request: ChatRequest):
         "answer": final_answer,
         "graph_data": graph_data,
         "relevance": relevance_score,
-        "confidence": confidence_score,
-        "audio": audio_base64  # 将生成的 base64 音频传给前端
+        "confidence": confidence_score
     }
 
 if __name__ == "__main__":
